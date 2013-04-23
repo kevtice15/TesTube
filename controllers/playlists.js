@@ -86,6 +86,11 @@ exports.addVideo = function(request, response){
 		else{
 			console.log("This is RESOURCE:", Resource);
 			Resource.videos.push(newVideo);
+			Resource.save(function(err){
+				if(err){
+					console.log(err);
+				}
+			});
 			//Resource.addNewVideo(playlist_id, fields.body.video_id, fields.body.video_name, function(docs, video){
 				//console.log("DOCS", docs);
 				//r.update(docs);
