@@ -82,15 +82,8 @@ exports.addVideo = function(request, response){
 	r.addNewVideo(playlist_id, fields.video_id, fields.video_name, function(docs, video){
 		console.log("DOCS", docs);
 		r.videos.push(video);
-		console.log(r.videos[0]);
-		r.save(function(err, Resource){
-			if(err){
-				response.send(500, {error: err});
-			}
-			response.send(Resource);
-		});
+		response.send(r);
 	});
-	response.send(r);
 };
 
 function playlistLog(err){
