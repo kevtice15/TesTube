@@ -78,7 +78,12 @@ Playlist.methods.getUserPlaylists = function(id, got){
 Playlist.methods.addNewVideo = function(playlist_id, video_id, video_name, pushIt){
 	var Plist = mongoose.model("Playlist");
 	var Vid = mongoose.model("Video");
-	var newVideo = new Vid({youtube_id: video_id}, {name: video_name}, {votes: 0});
+	var newVideo = new Vid({youtube_id: video_id, name: video_name, votes: 0});
+	newVideo.save(function(err){
+		if(err){
+			console.log(err);
+		}
+	});
 	console.log("Playlist ID: ", playlist_id);
 	console.log("Video ID: ", video_id);
 	console.log("Video Name: ", video_name);
@@ -87,11 +92,11 @@ Playlist.methods.addNewVideo = function(playlist_id, video_id, video_name, pushI
 			console.log(err);
 		}
 		else{
-			console.log("docs", docs);
+			console.log("This is docs", docs);
+			console.log("This is newVideo", newVideo);
 			return pushIt(docs, newVideo);
 		}
 	});
-	console.log("query", query);
 };
 
 module.exports = mongoose.model("Playlist", Playlist);

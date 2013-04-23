@@ -79,9 +79,15 @@ exports.addVideo = function(request, response){
 	var fields = request.body;
 	console.log("fields", fields);
 	var r = new Resource();
-	r.addNewVideo(playlist_id, fields.video_id, fields.video_name, function(docs, video){
+	r.addNewVideo(playlist_id, fields.body.video_id, fields.body.video_name, function(docs, video){
 		console.log("DOCS", docs);
+		docs.videos.push(video);
 		r.videos.push(video);
+		docs.save(function(err){
+			if(err){
+				console.log(err);
+			}
+		});
 		response.send(r);
 	});
 };
