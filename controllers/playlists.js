@@ -91,16 +91,6 @@ exports.addVideo = function(request, response){
 					console.log(err);
 				}
 			});
-			//Resource.addNewVideo(playlist_id, fields.body.video_id, fields.body.video_name, function(docs, video){
-				//console.log("DOCS", docs);
-				//r.update(docs);
-				//r.videos.push(video);
-				//console.log("This is r: ", r);
-				//r.save(function(err){
-				//if(err){
-				//	console.log(err);
-				//}
-			//});
 			response.send(Resource);
 		}
 	});
