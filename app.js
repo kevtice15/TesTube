@@ -79,6 +79,8 @@ passport.serializeUser(function(user, done) {
   done(null, user.id);
 });
 
+
+///////DONT CALL THIS AGAIN DOWN THERE
 passport.deserializeUser(function(id, done){
 	//var userId = new mongoose.Types.ObjectID(id);
 	User.findOne({'google_id': id}, function(err, user){
@@ -111,7 +113,7 @@ passport.use(new GoogleStrategy({
       // and return that user instead.
       User.findOne({'google_id': profile.id}, function(err, docs){
 		console.log(docs);
-		if(docs !== undefined){
+		if(docs !== null){
 			//Start a session
 			return done(null, docs);
 		}
@@ -125,7 +127,7 @@ passport.use(new GoogleStrategy({
 			return done(null, newUser);
 		}
 	});
-      return done(null, profile._json);
+      //return done(null, profile._json);
     });
   }
 ));

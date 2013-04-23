@@ -77,18 +77,27 @@ exports.addVideo = function(request, response){
 	var playlist_id = request.params.id;
 	console.log("Playlists playlist id", playlist_id);
 	var fields = request.body;
+	var newVideo = new Vid({youtube_id: fields.body.video_id, name: fields.body.video_name, votes: 0});
 	console.log("fields", fields);
-	var r = new Resource();
-	r.addNewVideo(playlist_id, fields.body.video_id, fields.body.video_name, function(docs, video){
-		console.log("DOCS", docs);
-		docs.videos.push(video);
-		r.videos.push(video);
-		docs.save(function(err){
-			if(err){
-				console.log(err);
-			}
-		});
-		response.send(r);
+	Resource.findById(playlist_id, function(err, Resource){
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log("This is RESOURCE:", Resource);
+			Resource.videos.push(newVideo);
+			//Resource.addNewVideo(playlist_id, fields.body.video_id, fields.body.video_name, function(docs, video){
+				//console.log("DOCS", docs);
+				//r.update(docs);
+				//r.videos.push(video);
+				//console.log("This is r: ", r);
+				//r.save(function(err){
+				//if(err){
+				//	console.log(err);
+				//}
+			//});
+			response.send(Resource);
+		}
 	});
 };
 
