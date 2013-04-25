@@ -145,6 +145,9 @@ app.io.route('rooms', {
 
 
 	//My Routes
+	app.post('/users/:id/new/playlist', function(request, response){
+		users.addPlaylist(request, response);
+	});
 	app.get('/users/:id/playlists', function(request, response){
 		users.retrievePlaylists(request, response);
 	});

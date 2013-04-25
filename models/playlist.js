@@ -43,7 +43,7 @@ var Playlist = new mongoose.Schema({
 	name: String,
 	dj: mongoose.Schema.ObjectId
 });
-
+/*
 //Fills DJ and Creator fields in the playlist document after it is created
 Playlist.methods.addCreatorandDJ = function(user){
 	var Plist = mongoose.model("Playlist");
@@ -62,7 +62,7 @@ Playlist.methods.addCreatorandDJ = function(user){
 	});
 	console.log("Added creator and dj: ", user);
 };
-
+*/
 //Returns the playlists associated with a given user id, passes them back in a callback fn
 Playlist.methods.getUserPlaylists = function(id, got){
 	var Plist = mongoose.model("Playlist");

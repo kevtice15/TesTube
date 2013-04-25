@@ -23,8 +23,22 @@ User.on('index', function(err){
 */
 
 
-UserSchema.methods.addPlaylist = function(userId){
-	var playlist = mongoose.model('Playlist');
+UserSchema.methods.addPlaylist = function(playlistId){
+	var Plist = mongoose.model("Playlist");
+	var fields = {
+		creator: user.id,
+		dj: user.id
+	};
+	console.log(this._id);
+	Plist.findByIdAndUpdate(playlistId, {$set: fields}, function(err, resp){
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log("Updated playlist", resp);
+		}
+	});
+	console.log("Added creator and dj: ", user);
 
 };
 
