@@ -116,9 +116,9 @@ $(document).ready(function(){
   	});
   	
 
-  	
-	
-  	
+  
+  
+   	
   	$('#playListMenuButton').click(function(){
 	  	topValue -= height;
 	  	$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
@@ -126,20 +126,34 @@ $(document).ready(function(){
 	  	$('#playlist-wrapper').css({zIndex: 100});
   	});
   	
+  	
   	var playerHeightRatio = 0.5;
   	var menuPercentage = .10;	
   	var playerTop  = (playerHeightRatio * height) + (menuPercentage * height) ; 
   	var down = false;
+  	
   	$('#playerButton').click(function(){
   	console.log(playerTop);
 	  	if(down === false) {
-		  	$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute'});
-		  	down =true;
+		  	$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute', img: 'plus.png'});
+		  	$('#player').attr('src','playerGlow.png');
+  	 			down =true;
 		} else {
 			$('#playListDiv').css({bottom: 0, left: 0, position: 'absolute'});
+			$('#player').attr('src','player.png');
+
 		  	down =false;
 		}
   	})
+  	
+  	$('#searchResults').on('click', '.video-result-wrapper', function(){
+		 console.log(this);
+		 console.log($(this));
+		 console.log($(this).find('.add'));
+		 console.log($(this).find('.add img'));
+	  	$(this).find('.add img').attr('src', 'check.png');
+  	});
+  	
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);

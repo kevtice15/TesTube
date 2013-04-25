@@ -64,7 +64,7 @@
 			<div id="room">
 				<div id="roomMenu">
 				<a id="searchVideo"><img class="rightIcon" src="plus.png"/></a>
-				<a id="playerButton"><img class="icon" src="player.png"/></a>				
+				<a id="playerButton"><img class="icon" id="player" src="player.png"/></a>				
 				<a id="backButton"><img class="leftIcon" src="back.png"/></a>									
 			</div>
 				<!--Video Screen-->
@@ -143,8 +143,11 @@
 						<div class="thumbnail">
 							<img src="{{snippet.thumbnails.default.url}}">
 						</div>
-						<h2 class="search-title"> {{snippet.title}} </h2>
-						<p class="search-id"> {{id.videoId}}</p>
+						<div class="search-title"> {{snippet.title}} </div>
+<!-- 						<p class="search-id"> {{id.videoId}}</p> -->
+						<div class="add">
+							<img src="add.png">
+						</div>
 					</div>	
 					{{/each}}	
 								
