@@ -363,6 +363,8 @@ app.io.sockets.on("connection", function(socket) {
 
 });
 
+var justDeleteMe;
+
 function socketEventLog(log){
 	console.log("[Socket emit] - ", log);
 }
