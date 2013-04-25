@@ -21,6 +21,7 @@ User.on('index', function(err){
 	}
 });
 */
-UserSchema.methods.addRoomId = function (roomId){
-	this.room_id = roomId;
+
+UserSchema.methods.isDJ = function(userId){
+	var user = mongoose.model("UserSchema");
 };
