@@ -285,15 +285,15 @@ app.io.sockets.on("connection", function(socket) {
 		var user = socket.handshake.session.passport.user;
 		var updateUser = mongoose.model('UserSchema');
 		
-		//Attach user to room they just joined
-		updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
-			if(err){
-				console.log(err);
-			}
-			else{
-				console.log(updateUser);
-			}
-		});
+		//TODO Attach user to room they just joined
+		//updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
+		//	if(err){
+		//		console.log(err);
+		//	}
+		//	else{
+		//		console.log(updateUser);
+		//	}
+		//});
 
 		// join room
 		socket.join(roomname);
