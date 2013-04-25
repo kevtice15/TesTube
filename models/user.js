@@ -22,6 +22,20 @@ User.on('index', function(err){
 });
 */
 
+
+UserSchema.methods.addPlaylist = function(userId){
+	var playlist = mongoose.model('Playlist');
+
+};
+
+UserSchema.methods.addSongToPlaylist = function(playlistId){
+
+};
+
+UserSchema.methods.deleteSongFromPlaylist = function(playlistId){
+
+};
+
 UserSchema.methods.isDJ = function(userId){
 	var user = mongoose.model("UserSchema");
 };
