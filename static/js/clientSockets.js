@@ -31,11 +31,19 @@ function clientJoinRoom(r){
 	});
 	
 	socket.on("newVideo", function(data) {
-	   $("#playlist").append($("<li>").html(data.body));
-	   playlist.push(data.body);
+
+		var source = document.getElementById("playlistTemplate").innerHTML;
+		var template = Handlebars.compile(source);
+		console.log(data.body);
+		//placeholder is the parent div
+		document.getElementById("playlist").innerHTML = template(data.body);
+
+
+	   // $("#playlist").append($("<li>").html(data.body.id));
+	   playlist.push(data.body.id);
 	   if(currentVideoId === null){
-			player.cueVideoById(data.body);
-			currentVideoId = data.body;
+			player.cueVideoById(data.body.id);
+			currentVideoId = data.body.id;
 			currentVideoIndex = 0;
 	   }
 	});
@@ -69,7 +77,7 @@ function clientLeaveRoom(){
 
 function clientCreateRoom(r){
 	
-	$('#rooms').prepend('<li><a href="#" onclick="clientJointRoom(\''+r+'\')">' + r + '</a></li>');
+	$('#rooms').prepend('<li onclick="clientJointRoom(\''+r+'\')"><a href="#" >' + r + '</a></li>');
 
 
 	//REDUNDANT CODE EXCEPT FOR A FEW THINGS......WILL WANT TO CREATE A ????
@@ -135,8 +143,10 @@ function clientCreateRoom(r){
 	});
 }
 
-function addVideo(id){
-	socket.emit('videoAdded', {body: id });
+// function addVideo(id){
+function addVideo(videoData){
+	// socket.emit('videoAdded', {body: id });
+	socket.emit('videoAdded', {body: videoData });
 }
 
 function updateVideo(videoToPlay){

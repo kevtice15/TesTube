@@ -21,19 +21,7 @@ function search() {
   request.execute(function(response) {
     var str = JSON.stringify(response.result);
 
-
-	    //FUNCTION GOES HERE	
-	  var contentRequest = gapi.client.youtube.videos.list({
-	    id: 'wfpL6_0OBuA',
-	    part: 'statistics'
-	  });
-	
-	  contentRequest.execute(function(response){
-	    console.log(response);
-	  });
-
-
-    // console.log(response);
+    console.log(response);
 
     //clear the search results continer first
    // $('#searchResults').html('');
@@ -45,20 +33,34 @@ function search() {
 	document.getElementById("searchResults").innerHTML = template(response);
 	console.log(str);
 
+//THIS IS THE STATISTICS SEARCH
+  // var contentRequest = gapi.client.youtube.videos.list({
+  //   id: 'wfpL6_0OBuA',
+  //   part: 'statistics'
+  // });
 
+  // contentRequest.execute(function(response){
+  //   console.log(response);
+  // });
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
 	//var template2 = Handlebars.compile(source2);
 
 	//click
 	$('.video-result-wrapper').click(function(){
-		var id = $(this).data('id');
-		console.log(id);
+		// var id = $(this).data('id');
+    var videoData = $(this).data();
+    // console.log(videoData);
+    // var title = $(this).data-title;
+    // var thumbnail = $(this).data-thumbnail;
+
+		// console.log(id);
 		$(this).children('#video-result-wrapper').css({'backgroundColor': 'grey'});
-		console.log($(this).children('#video-result-wrapper'));
+		// console.log($(this).children('#video-result-wrapper'));
     // videoApp.updatePlaylist(id);
-    
-		addVideo(id);
+
+    addVideo(videoData);
+		// addVideo(id);
 		
 		//update dom correclty later
 		//var data = {id: id};

@@ -39,16 +39,16 @@
 			<!--home screen -->
 			<div id="home-screen">
 				<div id="homeMenu">
-					<img class="leftIcon" src="menu.png"/>
-					<img class="centerIcon" src="room.png"/>
-					<img class="rightIcon" src="plus.png"/>	
+					<img class="leftIcon" src="img/menu.png"/>
+					<img class="centerIcon" src="img/room.png"/>
+					<img class="rightIcon" src="img/plus.png"/>	
 				</div>
 				<ul id="rooms">
-					<li class="roomLI" id="room1">
-						<a href="#" onclick=clientJoinRoom('room1')>Room1</a>
+					<li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
+						<a href="#" >Room1</a>
 					</li>
-					<li class="roomLI" id="room2">
-						<a href="#" onclick=clientJoinRoom('room2')>Room2</a>
+					<li class="roomLI" id="room2" onclick=clientJoinRoom('room2')>
+						<a href="#" >Room2</a>
 					</li>
 					<li class="roomLI" id="create">
 						<input id="roomName" val=""></input>
@@ -63,9 +63,9 @@
 			<!--The Room container-->	
 			<div id="room">
 				<div id="roomMenu">
-				<a id="searchVideo"><img class="rightIcon" src="plus.png"/></a>
-				<a id="playerButton"><img class="icon" id="player" src="player.png"/></a>				
-				<a id="backButton"><img class="leftIcon" src="back.png"/></a>									
+				<a id="searchVideo"><img class="rightIcon" src="img/plus.png"/></a>
+				<a id="playerButton"><img class="icon" id="player" src="img/player.png"/></a>				
+				<a id="backButton"><img class="leftIcon" src="img/back.png"/></a>									
 			</div>
 				<!--Video Screen-->
 
@@ -79,12 +79,12 @@
 						</div>
 						
 						<div id="ytButtons">
-							<a id="previous"><img src="previous.png"/></a>	
-							<a id="stop"><img src="stop.png"/></a>
-							<a id="pause"><img src="pause.png"/></a>
-							<a id="play"><img src="play.png"/></a>							
-							<a id="next"><img src="next.png"/></a>
-							<a id="mute"><img src="mute.png"/></a>			
+							<a id="previous"><img src="img/previous.png"/></a>	
+							<a id="stop"><img src="img/stop.png"/></a>
+							<a id="pause"><img src="img/pause.png"/></a>
+							<a id="play"><img src="img/play.png"/></a>							
+							<a id="next"><img src="img/next.png"/></a>
+							<a id="mute"><img src="img/mute.png"/></a>			
 						</div>
 						
 <!--
@@ -106,7 +106,23 @@
 	-->
 					
 						<div id="buttons"></div>
-						<div id='playlist'></div>					
+						<div id='playlist'>
+							
+							<script id="playlistTemplate" type="text/x-handlebars-template">
+								
+								<div class="video-result-wrapper" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}" >
+									<div class="thumbnail">
+										<img src="{{thumbnail}}">
+									</div>
+									<div class="search-title"> {{title}} </div>
+			<!-- 						<p class="search-id"> {{id}}</p> -->
+								</div>	
+							
+											
+							</script>
+
+
+						</div>					
 					
 						
 					</div>
@@ -123,9 +139,9 @@
 				<div id="searchContainer">
 				
 				<div id="videoSearchMenu">
-			      <a id="search-button"><img class="rightIcon" src="search.png"/></a>
+			      <a id="search-button"><img class="rightIcon" src="img/search.png"/></a>
 			      <input id="query" value='' type="text"/>
-			      <a id="searchDone"><img class="leftIcon" src="back.png"/></a>
+			      <a id="searchDone"><img class="leftIcon" src="img/back.png"/></a>
 			    </div>	
 			    
 
@@ -139,14 +155,14 @@
 				<script id="myTemplate" type="text/x-handlebars-template">
 					
 					{{#each items}}
-					<div class="video-result-wrapper" data-id="{{id.videoId}}">
+					<div class="video-result-wrapper" data-id="{{id.videoId}}" data-title="{{snippet.title}}" data-thumbnail="{{snippet.thumbnails.default.url}}" >
 						<div class="thumbnail">
 							<img src="{{snippet.thumbnails.default.url}}">
 						</div>
 						<div class="search-title"> {{snippet.title}} </div>
 <!-- 						<p class="search-id"> {{id.videoId}}</p> -->
 						<div class="add">
-							<img src="add.png">
+							<img src="img/add.png">
 						</div>
 					</div>	
 					{{/each}}	
