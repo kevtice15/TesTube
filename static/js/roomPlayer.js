@@ -19,12 +19,15 @@ function createPlaylist(pname, pshared){
 	});
 }
 
-function getMyPlaylists(id){
+function getMyPlaylists(){
 	$.ajax({
 		type: 'get',
-		url:'/users/' + id + '/playlists',
-		success: function(data){
+		url:'/user/playlists',
+		success: function(data, err){
 			console.log(data);
+			if(err){
+				console.log(err);
+			}
 		}
 	});
 }
@@ -38,6 +41,17 @@ function addVideoToPlaylist(playlist_id, vid_id, vid_name){
 			console.log(data);
 		}
 	});
+}
+
+function addPlaylistToUser(name, shared){
+	$.ajax({
+		type: 'post',
+		data: {'body':{'name': name, 'shared': shared}},
+		url: '/user/new/playlist',
+		success: function(data){
+			console.log(data);
+		}
+	})
 }
 
 $(document).ready(function(){

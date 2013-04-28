@@ -146,6 +146,9 @@ app.get("/static/lib/:filename", function(request, response){
 app.get("/static/css/:filename", function(request, response){
 	response.sendfile("static/css/" + request.params.filename);
 });
+app.get("/static/img/:filename", function(request, response){
+	response.sendfile("static/img/" + request.params.filename);
+});
 
 app.get('/', function(req, res){
   res.render('index', { user: req.user });
@@ -260,18 +263,46 @@ app.io.sockets.on("connection", function(socket) {
 	console.log('SERVER CONNECTION!@@@@@@@@@@@@@@@@@@@@@@@@@@');
 
 	socket.on('addRoom', function(roomname){
+		var user = socket.handshake.session.passport.user;
+		//create new room in db
+		var newRoom = new Room({'name': roomname, 'DJ': user});
+		var updateUser = mongoose.model('UserSchema');
+		
+		//Attach user to room they just joined
+		updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log(updateUser);
+			}
+		});
 		//socket.emit('rooms:create', {body:{name: roomname}});
-	//	rooms.create({name: roomname});
+		//rooms.create({name: roomname});
 	});
 
 
 	socket.on('joinRoom', function(roomname){
 		// store the room name in the socket session for this client
 		socket.room = roomname;
+		var user = socket.handshake.session.passport.user;
+		var updateUser = mongoose.model('UserSchema');
+		
+		// TODO Attach user to room they just joined
+		// updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
+		// 	if(err){
+		// 		console.log(err);
+		// 	}
+		// 	else{
+		// 		console.log(updateUser);
+		// 	}
+		// });
 
 		// join room
 		socket.join(roomname);
-		
+		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
+		//console.log('newRoom', newRoom);
+		//user.update({'data': {'room_id'}, })
 		console.log("you joined: " + roomname);
 		// echo to client they've connected
 		socket.emit('updatechat', 'you have connected to' + roomname);
@@ -284,6 +315,18 @@ app.io.sockets.on("connection", function(socket) {
 
 
 	socket.on('disconnect', function(){
+		var updateUser = mongoose.model('UserSchema');
+		
+		//Attach user to room they just joined
+		updateUser.findByIdAndUpdate(user, {room_id:''}, function(err, updateUser){
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log(updateUser);
+			}
+		});
+		//TODO Delete room from db
 		var oldroom = socket.room;
 		socket.leave(socket.room);
 		console.log('user left room');
@@ -293,9 +336,12 @@ app.io.sockets.on("connection", function(socket) {
 
 	socket.on('videoAdded', function(data){
 		socket.emit('status', {success: 'true'});
-		app.io.sockets.in(socket.roomname).emit('newVideo', { body: data.body });
-		roomState.playlist.push(data.body);
+		app.io.sockets.in(socket.room).emit('newVideo', { body: data.body });
+		roomState.playlist.push(data.body.id);
 		console.log("Current playlist on server: " + roomState.playlist);
+		console.log(data.body);
+		console.log("socket.room: " + socket.room);
+		console.log("socket.roomname: " + socket.roomname);
 	});
 
 	socket.on('updateVideo', function(video){
@@ -322,6 +368,8 @@ app.io.sockets.on("connection", function(socket) {
 	});
 
 });
+
+var justDeleteMe;
 
 function socketEventLog(log){
 	console.log("[Socket emit] - ", log);
