@@ -32,12 +32,12 @@ function clientJoinRoom(r){
 	
 	socket.on("newVideo", function(data) {
 
-		var source = document.getElementById("playlistTemplate").innerHTML;
-		var template = Handlebars.compile(source);
+		var source1 = document.getElementById("playlistTemplate").innerHTML;
+		var template1 = Handlebars.compile(source1);
 		console.log(data.body);
 		//placeholder is the parent div
-		document.getElementById("playlist").innerHTML = template(data.body);
-
+/* 		document.getElementById("playlist").innerHTML = template1(data.body); */
+		$('#playlist').append(template1(data.body));
 
 	   // $("#playlist").append($("<li>").html(data.body.id));
 	   playlist.push(data.body.id);
