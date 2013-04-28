@@ -69,91 +69,91 @@ $(document).ready(function(){
 	$('#login-button').click(function() {
 		leftValue -= (width - 0);
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
-  	});	
+	});	
 */
 
-  	$('.roomLI').click(function() {
-  		leftValue -= (width - 0);
-/*   		leftValue -= Math.floor(width) */
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-  	});
-  	
-  	$('#backButton').click(function() {
-  		leftValue += (width - 0);
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
-  	});
-  	 	
- 	 	
-  	//search menu
-  	$('#searchVideo').click(function() {
+	$('.roomLI').click(function() {
 		leftValue -= (width - 0);
- 	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
- 	  	console.log("done");
-  	});    	 	
-  	 	
+/*   		leftValue -= Math.floor(width) */
+		console.log(leftValue);
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+	});
+	
+	$('#backButton').click(function() {
+		leftValue += (width - 0);
+		console.log(leftValue);
+		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+	});
+		
+		
+	//search menu
+	$('#searchVideo').click(function() {
+		leftValue -= (width - 0);
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
+		console.log("done");
+	});    	 	
+		
 	$('#searchDone').click(function() {
 		leftValue += (width - 0);
- 	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
- 	  	console.log("done");
- 	  	});  	 	
-  	 	
-  	
-  	
-  	
-  	
-  	
-  	$('#searchMenuButton').click(function() {
-	  	topValue -= height;
-	  	$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
-	  	$('#playlist-wrapper').css({zIndex: 0});
-	  	$('#searchContainer').css({zIndex: 100});
-  	});
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
+		console.log("done");
+		});  	 	
+		
+	
+	
+	
+	
+	
+	$('#searchMenuButton').click(function() {
+		topValue -= height;
+		$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
+		$('#playlist-wrapper').css({zIndex: 0});
+		$('#searchContainer').css({zIndex: 100});
+	});
 
-  	$('#search-button').click(function() {
-	  	search($('#query').val());
-  	});
-  	
+	$('#search-button').click(function() {
+		search($('#query').val());
+	});
+	
 
   
   
-   	
-  	$('#playListMenuButton').click(function(){
-	  	topValue -= height;
-	  	$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
-	  	$('#searchContainer').css({zIndex: 0});
-	  	$('#playlist-wrapper').css({zIndex: 100});
-  	});
-  	
-  	
-  	var playerHeightRatio = 0.5;
-  	var menuPercentage = .10;	
-  	var playerTop  = (playerHeightRatio * height) + (menuPercentage * height) ; 
-  	var down = false;
-  	
-  	$('#playerButton').click(function(){
-  	console.log(playerTop);
-	  	if(down === false) {
-		  	$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute', img: 'plus.png'});
-		  	$('#player').attr('src','playerGlow.png');
-  	 			down =true;
+	
+	$('#playListMenuButton').click(function(){
+		topValue -= height;
+		$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
+		$('#searchContainer').css({zIndex: 0});
+		$('#playlist-wrapper').css({zIndex: 100});
+	});
+	
+	
+	var playerHeightRatio = 0.5;
+	var menuPercentage = .10;	
+	var playerTop  = (playerHeightRatio * height) + (menuPercentage * height) ; 
+	var down = false;
+	
+	$('#playerButton').click(function(){
+	console.log(playerTop);
+		if(down === false) {
+			$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute', img: 'img/plus.png'});
+			$('#player').attr('src','img/playerGlow.png');
+				down =true;
 		} else {
 			$('#playListDiv').css({bottom: 0, left: 0, position: 'absolute'});
-			$('#player').attr('src','player.png');
+			$('#player').attr('src','img/player.png');
 
-		  	down =false;
+			down =false;
 		}
-  	})
-  	
-  	$('#searchResults').on('click', '.video-result-wrapper', function(){
-		 console.log(this);
-		 console.log($(this));
-		 console.log($(this).find('.add'));
-		 console.log($(this).find('.add img'));
-	  	$(this).find('.add img').attr('src', 'check.png');
-  	});
-  	
+	})
+	
+	$('#searchResults').on('click', '.video-result-wrapper', function(){
+		 // console.log(this);
+		 // console.log($(this));
+		 // console.log($(this).find('.add'));
+		 // console.log($(this).find('.add img'));
+		$(this).find('.add img').attr('src', 'img/check.png');
+	});
+	
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);
