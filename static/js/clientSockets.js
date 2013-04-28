@@ -77,7 +77,7 @@ function clientLeaveRoom(){
 
 function clientCreateRoom(r){
 	
-	$('#rooms').prepend('<li onclick="clientJointRoom(\''+r+'\')"><a href="#" >' + r + '</a></li>');
+	$('#rooms').prepend('<li class="roomLI" id="'+r+'" onclick="clientJointRoom(\''+r+'\')"><a href="#" >' + r + '</a></li>');
 
 
 	//REDUNDANT CODE EXCEPT FOR A FEW THINGS......WILL WANT TO CREATE A ????
