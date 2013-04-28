@@ -146,6 +146,9 @@ app.get("/static/lib/:filename", function(request, response){
 app.get("/static/css/:filename", function(request, response){
 	response.sendfile("static/css/" + request.params.filename);
 });
+app.get("/static/img/:filename", function(request, response){
+	response.sendfile("static/img/" + request.params.filename);
+});
 
 app.get('/', function(req, res){
   res.render('index', { user: req.user });
@@ -285,20 +288,20 @@ app.io.sockets.on("connection", function(socket) {
 		var user = socket.handshake.session.passport.user;
 		var updateUser = mongoose.model('UserSchema');
 		
-		//TODO Attach user to room they just joined
-		//updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
-		//	if(err){
-		//		console.log(err);
-		//	}
-		//	else{
-		//		console.log(updateUser);
-		//	}
-		//});
+		// TODO Attach user to room they just joined
+		// updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
+		// 	if(err){
+		// 		console.log(err);
+		// 	}
+		// 	else{
+		// 		console.log(updateUser);
+		// 	}
+		// });
 
 		// join room
 		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
-		console.log('newRoom', newRoom);
+		// console.log('newRoom', newRoom);
 		//user.update({'data': {'room_id'}, })
 		console.log("you joined: " + roomname);
 		// echo to client they've connected
@@ -333,9 +336,12 @@ app.io.sockets.on("connection", function(socket) {
 
 	socket.on('videoAdded', function(data){
 		socket.emit('status', {success: 'true'});
-		app.io.sockets.in(socket.roomname).emit('newVideo', { body: data.body });
-		roomState.playlist.push(data.body);
+		app.io.sockets.in(socket.room).emit('newVideo', { body: data.body });
+		roomState.playlist.push(data.body.id);
 		console.log("Current playlist on server: " + roomState.playlist);
+		console.log(data.body);
+		console.log("socket.room: " + socket.room);
+		console.log("socket.roomname: " + socket.roomname);
 	});
 
 	socket.on('updateVideo', function(video){
