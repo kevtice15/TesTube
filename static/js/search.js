@@ -21,8 +21,108 @@ function search() {
   request.execute(function(response) {
     var str = JSON.stringify(response.result);
 
-    console.log(response);
+    //console.log(response);
 
+/*
+    var searchIds = [];
+    //loop through results and create a json object from id for the dom
+    $.each(response.items, function(i){
+    	//video id's use this to search stats
+	    //console.log(response.items[i].id.videoId);
+	    searchIds.push(response.items[i].id.videoId);
+	});
+	console.log("searchids");
+	console.log(searchIds);
+*/
+	
+   
+	    
+/*
+   var contentRequest = gapi.client.youtube.videos.list({
+     id: 'wfpL6_0OBuA',
+     part: 'statistics'
+   });
+*/
+
+
+	 var statsObject = [];
+
+//MINE
+    //loop through results and create a json object from id for the dom
+    $.each(response.items, function(i){
+	    var statsObject = [];
+
+		var contentRequest = gapi.client.youtube.videos.list({
+			id: response.items[i].id.videoId,
+			part: 'statistics'
+    	});
+
+    	contentRequest.execute(function(response){
+	    	var stringify = JSON.stringify(response);  
+	    	console.log("view count below");
+	    	console.log(response.items[0].statistics);     
+ 			statsObject.push(response.items[0].statistics); 
+
+     	});
+     	
+     		console.log("stats object below");
+	console.log(statsObject);
+     	
+/*
+     	console.log("content request");
+     	console.log(contentRequest);
+*/
+     		
+/*      	statsObject.push(contentRequest); */
+/*      	console.log(contentRequest);	     */
+	});
+	
+	
+	
+	
+	
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//THIS IS THE STATISTICS SEARCH
+
+/*
+   var contentRequest1 = gapi.client.youtube.videos.list({
+     id: 'wfpL6_0OBuA',
+     part: 'statistics'
+   });
+	
+   console.log(contentRequest1);
+   
+  
+
+   contentRequest.execute(function(response){
+	 var stringify = JSON.stringify(response);  
+     console.log("view count below");
+     console.log(response.items[0].statistics);     
+   });	
+*/ 
+   
+	    
+	    
+	    
+	    
+	    
+	    
+	    
     //clear the search results continer first
    // $('#searchResults').html('');
     
@@ -31,17 +131,10 @@ function search() {
 	var template = Handlebars.compile(source);	
 	//placeholder is the parent div
 	document.getElementById("searchResults").innerHTML = template(response);
-	console.log(str);
+/* 	console.log(str); */
 
-//THIS IS THE STATISTICS SEARCH
-  // var contentRequest = gapi.client.youtube.videos.list({
-  //   id: 'wfpL6_0OBuA',
-  //   part: 'statistics'
-  // });
 
-  // contentRequest.execute(function(response){
-  //   console.log(response);
-  // });
+
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
 	//var template2 = Handlebars.compile(source2);
