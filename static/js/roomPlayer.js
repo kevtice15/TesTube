@@ -63,6 +63,7 @@ $(document).ready(function(){
 	var height = $(window).height();
 	console.log(width);
 	console.log(height);
+	var test;
 
 	function createVideo(id){
 		$('#ytplayer').attr('class', 'video-frame');
@@ -89,19 +90,21 @@ $(document).ready(function(){
 	$('.roomLI').click(function() {
 		leftValue -= (width - 0);
 /*   		leftValue -= Math.floor(width) */
-		console.log(leftValue);
-		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-	});
-	
-	$('#backButton').click(function() {
-		leftValue += (width - 0);
-		console.log(leftValue);
-		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
-	});
-		
-		
-	//search menu
-	$('#searchVideo').click(function() {
+  		console.log(leftValue);
+	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+	  	
+	  	$(this).addClass('depressed');
+  	});
+  	
+  	$('#backButton').click(function() {
+  		leftValue += (width - 0);
+  		console.log(leftValue);
+	  	$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+  	});
+  	 	
+ 	 	
+  	//search menu
+  	$('#searchVideo').click(function() {
 		leftValue -= (width - 0);
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
 		console.log("done");

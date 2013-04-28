@@ -16,10 +16,10 @@ function search() {
     // part: 'snippet(title, description, thumbnails)'
     fields: 'items(id(videoId), snippet(title, thumbnails))',
     part: 'snippet'
-  });
+});
 
   request.execute(function(response) {
-    //var str = JSON.stringify(response.result);
+    var str = JSON.stringify(response.result);
 
     console.log(response);
 
@@ -31,6 +31,7 @@ function search() {
 	var template = Handlebars.compile(source);	
 	//placeholder is the parent div
 	document.getElementById("searchResults").innerHTML = template(response);
+	console.log(str);
 
 //THIS IS THE STATISTICS SEARCH
   // var contentRequest = gapi.client.youtube.videos.list({

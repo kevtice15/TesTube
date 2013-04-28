@@ -1,10 +1,20 @@
 /* colors */
+
+/*blue*/
 @accentColor: #00a2ff;
-@backgroundColor: #313131;
+/*dark gray*/
 @backgroundColor2: #444444;
+/*mid gray*/
+@backgroundColor: #313131;
+/*light gray*/
+@backgroundColor3: #d7d7d7;
+/*white*/
 @buttonColor: white; 
+
+
+
 @menuColor: #282828;     
-     
+
 /* width height */
 @screenWidth: 100%;
 @screenHeight: 100%;
@@ -68,6 +78,28 @@ input {
 	-moz-box-sizing:    @type;
 	box-sizing:         @type;
 }
+
+/* input box shaddow */
+.input-shadow {
+   -moz-box-shadow:    inset 0 0 10px #000000;
+   -webkit-box-shadow: inset 0 0 10px #000000;
+   box-shadow:         inset 0 0 10px #000000;
+}
+
+.input-select-shaddow {
+	-moz-box-shadow: 0 0 20px white;
+   -webkit-box-shadow: 0 0 20px white;
+   box-shadow: 0 0 10px white;	
+}
+
+.top-bottom-inset-shaddow {
+	-moz-box-shadow:inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
+    -webkit-box-shadow: inset 0px 10px 6px -6px black, inset 0px -6px 10px -6px black;
+     box-shadow: inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
+     
+     
+}
+
 
 .borderStyle {
 	border-top: 1px solid rgb(66, 65, 65);
@@ -200,8 +232,7 @@ input {
 	height: @screenHeight;
 	display: inline-block;
 	padding: 1px;
-	.box-sizing;
-	
+	.box-sizing;	
 	h2 {
 		padding: 1em;
 		color: white;
@@ -231,40 +262,16 @@ input {
 }
 
 
-/*
 #rooms {
 	position: relative;
-	div {
-
-		.borderStyle;
-		font-family: @buttonFont;
-		font-weight: @buttonWeight;
-		font-size: @buttonRoom;
-		background-color: @backgroundColor;
-		color: white;
-		line-height: 100%;
-		padding: 1em 1em 1em 1em;
-
-		height: 3%;
-		
-		&:hover { 
-				color: white;
-				background-color: #00a2ff; 
-		}	
-		
-	}
-}
-*/
-
-#rooms {
-	position: relative;
+	background-color: @backgroundColor;
+	
 	li {
 
 		.borderStyle;
 		font-family: @buttonFont;
 		font-weight: @buttonWeight;
 		font-size: @buttonRoom;
-		background-color: @backgroundColor;
 		color: white;
 		line-height: 100%;
 		padding: 1em 1em 1em 1em;
@@ -280,14 +287,11 @@ input {
 	list-style: none;
 }
 
+.depressed {
 
-
-
-
-
-
-
-
+		background-color: @accentColor;
+		.top-bottom-inset-shaddow;
+}
 
 
 /* room screen */
@@ -303,7 +307,6 @@ input {
 	left: (@screenWidth / @screenViews);
 	width: @screenWidth / @screenViews;
 	height: @screenHeight;	
-	
 	
 	display: inline-block;
 /* 	.box-sizing; */
@@ -333,8 +336,6 @@ input {
 
 	.borderStyleMenu;
 } 
-
-
 
 /*pushes down playlist on menu click, large container*/
 #playListDiv {
@@ -399,18 +400,6 @@ input {
 
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
 #buttons {
 	position: relative;
 	margin-top: 5px;
@@ -429,12 +418,6 @@ input {
 		}
 	}
 }
-
-
-
-
-
-
 
 #searchMenuButton {
 	position: absolute;
@@ -465,8 +448,7 @@ input {
 	font-family: @buttonFont;
 	font-weight: @buttonWeight;
 	font-size: 20;
-	
-	
+		
 	background-color: @backgroundColor;
 	color: white;
 	border: 1px solid #3c3c3c;
@@ -506,16 +488,28 @@ search results will
 	left: ((@screenWidth / @screenViews) * 2);
 	width: (@screenWidth / @screenViews);
 	height: (@screenHeight + @bottomButtonHeight);
-
-
+	overflow: auto;
+	
 	background-color: white;
 	line-height: 100%;
+	/*search bar*/
 	input {
 		height: 60%;
 		width: 60%;
 		line-height: 100%;
 		margin-top: 1em;
-		margin-bottom: 1em;		
+		margin-bottom: 1em;	
+		
+		outline: none;
+		border-radius: 2px;
+		.input-shadow;
+		border: none;
+		
+		&:focus, active {
+			.input-shadow;
+			.input-select-shaddow;	 
+			border: 1px solid @accentColor;	
+		}						
 	}
 }
 
@@ -564,21 +558,6 @@ animate up and down
 	left: 0px;
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 #data {
 	position: relative;
 	width: 100%;
@@ -591,25 +570,48 @@ animate up and down
 	color: @accentColor;
 }
 
-
-
 .video-result-wrapper {
-	position: relative;
-	border: @thinBorder;
-	width: @screenWidth;
-	height: 75px;
-	text-align: center;
-	padding-top: 1px;
-	padding-bottom: 16px;
-
+/*
 	-webkit-transition: all 0.2s ease-in-out;
 	-moz-transition: all 0.2s ease-in-out;
 	-o-transition: all 0.2s ease-in-out;	
+*/
+	height: 75px;	
+/* 	border-bottom: 1px solid black; */
+	background: white;
+
+
+	.thumbnail {
+		height: 100%;
+		float: left;
+		img {
+			padding-right: 10px;
+			height: 100%;
+		}
+	}
 	
-	&:hover {
-		background-color: rgba(0,162,255,0.7);	
+	.add {
+		float: right;
+		height: 75px;
+		img {
+			height: 100%;
+		}
+	}
+	
+	.search-title {
+		font-size: 12px;
+		font-family: @buttonFont;  
+		font-weight: @buttonWeight; 
+		float: left;
+		width: 40%;		
 	}
 }
+
+
+
+
+
+
 
 #searchVideo {
 	float: right;
@@ -619,12 +621,6 @@ animate up and down
 	float: left;
 }
 
-
-
-
-
-
-
 p {
 	font-size: small;
 	font-family: @buttonFont;
@@ -632,25 +628,17 @@ p {
 	color: rgba(0,162,255,0.7);
 }
 
-
-
-
 h3 {
 	font-size: medium;
 	font-family: @buttonFont; 
-	font-weight: @textWeight; 	
-	
-	
+	font-weight: @textWeight; 		
 }
-
-
 
 .search-id {
 	font-size: small;
 	font-family: @buttonFont;  
 	font-weight: @textWeight; 
-	color: rgba(0,162,255,0.7);
-		
+	color: rgba(0,162,255,0.7);		
 }
 
 h2 {
@@ -662,36 +650,14 @@ a {
 }
 
 
-.thumbnail {
-	position: relative;
-	top: 0px;
-	left: 0px;
-	height: 75px;
-	float: left;
-}
 
-.search-title {
-	font-size: 12px;
-	font-family: @buttonFont;  
-	font-weight: @buttonWeight; 
-	float: left;
-	width: 50%;		
-}
 
-.add {
-	position: relative;
-	top: 0px;
-	right: 0px;
-	float: right;
-	height: 75px;
-	img {
-		height: 75px;
-	}
-}
+
+
+
 
 #add {
-	height: 75px;
-	
+	height: 75px;	
 }
 
 
