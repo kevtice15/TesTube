@@ -54,10 +54,14 @@ UserSchema.methods.addPlaylist = function(user, data, resp){
 UserSchema.deletePlaylist = function(user, playlist, resp){
 	var Playlist = mongoose.model('Playlist');
 	
-	Playlist.findByIdAndRemove(playlist,{},function(){
-
+	Playlist.findByIdAndRemove(playlist, function(err, Playlist){
+		if(err){
+			console.error(err);
+		}
+		else{
+			
+		}
 	});
-	var newPlaylist = new Playlist({creator: user, DJ: user, shared: data.body.shared, name: data.body.name});
 	newPlaylist.save(function(err){
 		if(err){
 			console.error(err);
@@ -89,6 +93,14 @@ UserSchema.methods.isDJ = function(userId, resp){
 		}
 	});
 */
+};
+
+UserSchema.methods.becomeDJ = function(){
+
+};
+
+UserSchema.methods.relinquishDJ = function(){
+
 };
 
 module.exports = mongoose.model("UserSchema", UserSchema);
