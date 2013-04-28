@@ -11,4 +11,20 @@ var Room = new mongoose.Schema({
 	}
 });
 
+Room.methods.getDJ = function(){
+
+};
+
+Room.methods.getPlaylist = function(){
+
+};
+
+Room.methods.updateState = function(){
+
+};
+
+Room.methods.getState = function(){
+
+}
+
 module.exports = mongoose.model("Room", Room);

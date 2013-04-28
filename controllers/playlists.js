@@ -11,7 +11,7 @@ exports.create = function(request, response){
 			response.send(500, {error: err});
 		}
 
-		r.addCreatorandDJ(request.user);
+		//r.addCreatorandDJ(request.user);
 		response.send(Resource);
 	});
 };

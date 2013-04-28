@@ -301,7 +301,7 @@ app.io.sockets.on("connection", function(socket) {
 		// join room
 		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
-		// console.log('newRoom', newRoom);
+		//console.log('newRoom', newRoom);
 		//user.update({'data': {'room_id'}, })
 		console.log("you joined: " + roomname);
 		// echo to client they've connected
