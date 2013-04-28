@@ -32,6 +32,8 @@ UserSchema.methods.addPlaylist = function(user, data, resp){
 	});
 	console.log(newPlaylist);
 	resp(newPlaylist);
+
+
 /*
 	var Plist = mongoose.model("Playlist");
 	var fields = {
@@ -59,9 +61,10 @@ UserSchema.deletePlaylist = function(user, playlist, resp){
 			console.error(err);
 		}
 		else{
-			
+			console.log(Playlist);
 		}
 	});
+	/*
 	newPlaylist.save(function(err){
 		if(err){
 			console.error(err);
@@ -69,6 +72,7 @@ UserSchema.deletePlaylist = function(user, playlist, resp){
 	});
 	console.log(newPlaylist);
 	resp(newPlaylist);
+	*/
 };
 
 //Returns array of all playlists associated with a user id
@@ -93,6 +97,30 @@ UserSchema.methods.isDJ = function(userId, resp){
 		}
 	});
 */
+};
+
+UserSchema.methods.joinRoom = function(userId, roomId, resp){
+	var User = mongoose.model('User');
+	User.findByIdAndUpdate(userId, {room_id: roomId}, function(err, User){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(User);
+		}
+	});
+};
+
+UserSchema.methods.leaveRoom = function(userId, roomId){
+	var User = mongoose.model('User');
+	User.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(User);
+		}
+	});
 };
 
 UserSchema.methods.becomeDJ = function(){

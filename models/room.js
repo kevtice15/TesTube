@@ -11,20 +11,76 @@ var Room = new mongoose.Schema({
 	}
 });
 
-Room.methods.getDJ = function(){
-
+Room.methods.getDJ = function(roomId, resp){
+	var Room = mongoose.model('Room');
+	Room.findById(roomId, function(err, room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(room.DJ);
+		}
+	});
 };
 
-Room.methods.getPlaylist = function(){
-
+Room.methods.getPlaylist = function(roomId, resp){
+	var Room = mongoose.model('Room');
+	Room.findById(roomId, function(err, room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(room.playlist);
+		}
+	});
 };
 
-Room.methods.updateState = function(){
-
+Room.methods.getState = function(roomId, resp){
+	var Room = mongoose.model('Room');
+	Room.findById(roomId, function(err, room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(room.state);
+		}
+	});
 };
 
-Room.methods.getState = function(){
+Room.methods.changeDJ = function(roomId, dj_id, resp){
+	var Room = mongoose.model('Room');
+	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, Room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(Room);
+		}
+	});
+};
 
-}
+Room.methods.changeState = function(roomId, newState){
+	var Room = mongoose.model('Room');
+	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, Room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(Room);
+		}
+	});
+};
+
+Room.methods.addPlaylist = function(roomId, playlistId){
+	var Room = mongoose.model('Room');
+	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, Room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			resp(Room);
+		}
+	});
+};
 
 module.exports = mongoose.model("Room", Room);

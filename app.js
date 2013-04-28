@@ -277,6 +277,7 @@ app.io.sockets.on("connection", function(socket) {
 				console.log(updateUser);
 			}
 		});
+		console.log("new room: " + roomname);
 		//socket.emit('rooms:create', {body:{name: roomname}});
 		//rooms.create({name: roomname});
 	});

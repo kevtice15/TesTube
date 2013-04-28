@@ -137,7 +137,7 @@ Playlist.methods.deleteVideo = function(playlistId, yt_id){
 };
 
 Playlist.methods.getVideos = function(playlistId){
-
+	
 };
 
 Playlist.methods.getUsers = function(){
