@@ -64,6 +64,7 @@ Playlist.methods.addCreatorandDJ = function(user){
 };
 */
 //Returns the playlists associated with a given user id, passes them back in a callback fn
+/*
 Playlist.methods.getUserPlaylists = function(id, got){
 	var Plist = mongoose.model("Playlist");
 	Plist.find({creator: id}, {}, function(err, docs){
@@ -74,6 +75,74 @@ Playlist.methods.getUserPlaylists = function(id, got){
 		}
 	});
 };
+*/
+
+Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, resp){
+	var Playlist = mongoose.model('Playlist');
+	var Video = mongoose.model('Video');
+	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
+	Playlist.findOne({_id: playlistId}, function(err, playlist){
+		if(err){
+			console.error(err);
+		}
+		else{
+			Playlist.videos.push(newVideo);
+			Playlist.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
+			resp(Playlist);
+		}
+	});
+	/*
+	var Resource = mongoose.model('Playlist');
+	var Vid = mongoose.model('Video');
+	var playlist_id = request.params.id;
+	console.log("Playlists playlist id", playlist_id);
+	var fields = request.body;
+	var newVideo = new Vid({youtube_id: fields.body.video_id, name: fields.body.video_name, votes: 0});
+	console.log("fields", fields);
+	Resource.findById(playlist_id, function(err, Resource){
+		if(err){
+			console.log(err);
+		}
+		else{
+			console.log("This is RESOURCE:", Resource);
+			Resource.videos.push(newVideo);
+			Resource.save(function(err){
+				if(err){
+					console.log(err);
+				}
+			});
+			response.send(Resource);
+		}
+	});
+	 */
+};
+
+Playlist.methods.deleteVideo = function(playlistId, yt_id){
+	var Playlist = mongoose.model('Playlist');
+	var Video = mongoose.model('Video');
+	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
+	Playlist.findOne({_id: playlistId}, function(err, playlist){
+		if(err){
+			console.error(err);
+		}
+		else{
+			//TODO: find the video and pull it
+		}
+	});
+
+};
+
+Playlist.methods.getVideos = function(playlistId){
+
+};
+
+Playlist.methods.getUsers = function(){
+
+}
 
 
 module.exports = mongoose.model("Playlist", Playlist);

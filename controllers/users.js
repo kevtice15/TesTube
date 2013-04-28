@@ -70,17 +70,32 @@ exports.del = function(request, response){
 };
 
 exports.retrievePlaylists = function(request, response){
-	var Resource = mongoose.model("Playlist");
-	var r = new Resource(request.body);
-	var userPlaylists = r.getUserPlaylists(request.params.id, function(docs){
+	userLog("I get to the user controller");
+	var User = mongoose.model("UserSchema");
+	var getUser = new User();
+	getUser.getPlaylists(request.user, function(docs){
 		console.log("RESPONSE", docs);
 		response.send({
 			playlist: docs,
-			success: true
+			success: (docs !== undefined)
+		});
+	});
+};
+
+exports.addPlaylist = function(request, response){
+	var User = mongoose.model("UserSchema");
+	var addPlaylistUser = new User();
+	var reqData = request.body;
+	console.log(reqData);
+	console.log(request.user);
+	addPlaylistUser.addPlaylist(request.user, reqData, function(data){
+		response.send({
+			success: true,
+			data: data
 		});
 	});
 };
 
 function userLog(err){
-	console.log("[User route] - ", err);
+	console.log("[User controller] - ", err);
 }

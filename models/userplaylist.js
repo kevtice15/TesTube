@@ -5,4 +5,13 @@ var UserPlaylist = new mongoose.Schema({
 	playlist_id: mongoose.Schema.ObjectId
 });
 
+UserPlaylist.methods.getPlaylists = function(){
+
+};
+
+UserPlaylist.methods.getUsers = function(){
+
+};
+
+
 module.exports = mongoose.model("UserPlaylist", UserPlaylist);
