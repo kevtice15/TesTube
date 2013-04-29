@@ -59,7 +59,6 @@ $(document).ready(function(){
 
 
 
-
 	var width = $(window).width();
 	var height = $(window).height();
 	console.log(width);
@@ -87,6 +86,7 @@ $(document).ready(function(){
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
 	});	
 */
+
 	//Code for the div to add a room
 	//==========================================================
 	$('#addRoomButton').click(function(){

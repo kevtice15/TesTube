@@ -110,17 +110,6 @@ function search() {
 	var source = document.getElementById("myTemplate").innerHTML;
 	var template = Handlebars.compile(source);	
 	document.getElementById("searchResults").innerHTML = template(response);
-	console.log(str);
-
-//THIS IS THE STATISTICS SEARCH
-  // var contentRequest = gapi.client.youtube.videos.list({
-  //   id: 'wfpL6_0OBuA',
-  //   part: 'statistics'
-  // });
-
-  // contentRequest.execute(function(response){
-  //   console.log(response);
-  // });
 
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
