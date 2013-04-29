@@ -23,13 +23,91 @@ function search() {
 
     console.log(response);
 
-    //clear the search results continer first
-   // $('#searchResults').html('');
-    
-    //mytemplate is the the template script to compile
+
+/*
+		var searchIds = [];
+		//loop through results and create a json object from id for the dom
+		$.each(response.items, function(i){
+			//video id's use this to search stats
+			//console.log(response.items[i].id.videoId);
+			searchIds.push(response.items[i].id.videoId);
+	});
+	console.log("searchids");
+	console.log(searchIds);
+*/
+	
+	 
+			
+/*
+	 var contentRequest = gapi.client.youtube.videos.list({
+		 id: 'wfpL6_0OBuA',
+		 part: 'statistics'
+	 });
+*/
+
 	var source = document.getElementById("myTemplate").innerHTML;
 	var template = Handlebars.compile(source);	
-	//placeholder is the parent div
+
+	var newObject = response; 
+
+    //loop through results and create a json object from id for the dom
+    var statsObject = [];
+    var count = response.items.length;
+    $.each(response.items, function(i){
+		var contentRequest = gapi.client.youtube.videos.list({
+			id: response.items[i].id.videoId,
+			part: 'statistics'
+    	});
+
+    	contentRequest.execute(function(response) {
+	    	//console.log(response.items[0].statistics);     
+ 			statsObject.push(response.items[0].statistics); 
+ 			
+/*  			console.log(newObject.items[i]); */
+ 			newObject.items[i].stats = response.items[0].statistics;
+ 			
+ 			
+ 			count--;
+ 			if (count == 0) {
+	    		console.log(newObject);
+	    		document.getElementById("searchResults").innerHTML = template(newObject);
+	    	}	    
+     	});
+     	
+     	
+     	
+     });
+     
+     
+     var stringify = JSON.stringify(newObject);  
+/*     console.log(stringify); */
+	
+/*
+	$.each(response.items, function(i){
+	})
+*/
+//THIS IS THE STATISTICS SEARCH
+
+/*
+	 var contentRequest1 = gapi.client.youtube.videos.list({
+		 id: 'wfpL6_0OBuA',
+		 part: 'statistics'
+	 });
+	
+	 console.log(contentRequest1);
+	 
+	
+
+	 contentRequest.execute(function(response){
+	 var stringify = JSON.stringify(response);  
+		 console.log("view count below");
+		 console.log(response.items[0].statistics);     
+	 });	
+*/ 
+
+
+	var source = document.getElementById("myTemplate").innerHTML;
+	var template = Handlebars.compile(source);	
 	document.getElementById("searchResults").innerHTML = template(response);
 	console.log(str);
 
@@ -42,6 +120,7 @@ function search() {
   // contentRequest.execute(function(response){
   //   console.log(response);
   // });
+
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
 	//var template2 = Handlebars.compile(source2);
@@ -71,14 +150,6 @@ function search() {
 
 
 
-
-
-
-
-
-
-
-    //$.each(response.items, function(i){
 
 
 /*
