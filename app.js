@@ -49,7 +49,7 @@ app.configure(function() {
 });
 
 var mongoose = require('mongoose');
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect('mongodb://nodejitsu_kevtice15:ua790p8e99iuklq5j4k8ruh25t@ds059917.mongolab.com:59917/nodejitsu_kevtice15_nodejitsudb5039405615');
 
 var db = mongoose.connection;
 
