@@ -72,6 +72,10 @@ function clientJoinRoom(r, room_id){
 		player.clearVideo();
 	});
 
+	socket.on('populateRoom', function(playlist){
+		console.log("Populating playlist: " playlist);
+	});
+
 }
 
 function clientLeaveRoom(){
@@ -155,10 +159,6 @@ function clientCreateRoom(r){
 		player.stopVideo();
 		player.clearVideo();
 	});
-
-	socket.on('roomDoneCreated', function(){
-		socket.disconnect();
-	});
 }
 
 // function addVideo(id){
@@ -179,6 +179,10 @@ function playPauseToggle(state, time){
 
 function stopVideo(){
 	socket.emit('stop');
+}
+
+function disconnectFromRoom(){
+	socket.emit('disconnect');
 }
 
 

@@ -31,6 +31,7 @@ Room.statics.getPlaylist = function(roomId, callback){
 			console.log(err);
 		}
 		else{
+			console.log("found playlist: ", room.playlist);
 			callback(room.playlist);
 		}
 	});
