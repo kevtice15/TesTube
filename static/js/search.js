@@ -21,7 +21,7 @@ function search() {
 	request.execute(function(response) {
 		var str = JSON.stringify(response.result);
 
-		//console.log(response);
+		console.log(response);
 
 /*
 		var searchIds = [];
@@ -52,21 +52,22 @@ function search() {
 		$.each(response.items, function(i){
 			var statsObject = [];
 
-		var contentRequest = gapi.client.youtube.videos.list({
+			var contentRequest = gapi.client.youtube.videos.list({
 			id: response.items[i].id.videoId,
 			part: 'statistics'
 			});
 
-			contentRequest.execute(function(response){
-				var stringify = JSON.stringify(response);  
-				console.log("view count below");
-				console.log(response.items[0].statistics);     
-				statsObject.push(response.items[0].statistics); 
+			contentRequest.execute(function(statsResponse){
+				var stringify = JSON.stringify(statsResponse);  
+				// console.log("view count below");
+				// console.log(response.items[0].statistics);
+				response.items[0].statistics     
+				statsObject.push(statsResponse.items[0].statistics); 
 
 			});
 			
-				console.log("stats object below");
-				console.log(statsObject);
+				// console.log("stats object below");
+				// console.log(statsObject);
 			
 /*
 			console.log("content request");
@@ -80,7 +81,9 @@ function search() {
 	
 	
 	
-	
+	console.log("stats object below");
+				console.log(statsObject);
+			
 
 
 

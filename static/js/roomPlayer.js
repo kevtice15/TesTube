@@ -114,8 +114,6 @@ $(document).ready(function(){
 	//==========================================================
 
 
-
-
 	$('.roomLI').click(function() {
 		leftValue -= (width - 0);
 /*   		leftValue -= Math.floor(width) */
