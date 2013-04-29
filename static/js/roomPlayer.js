@@ -112,20 +112,19 @@ $(document).ready(function(){
 	//==========================================================
 
 
-	$('.roomLI').click(function() {
+	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
-/*   		leftValue -= Math.floor(width) */
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-	  	
-	  	$(this).addClass('depressed');
-  	});
-  	
-  	$('#backButton').click(function() {
-  		leftValue += (width - 0);
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
-  	});
+		/*leftValue -= Math.floor(width) */
+		console.log(leftValue);
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+		$(this).addClass('depressed');
+	});
+
+	$('#backButton').click(function() {
+		leftValue += (width - 0);
+		console.log(leftValue);
+		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+	});
   	 	
  	 	
   	//search menu
