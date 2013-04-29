@@ -19,12 +19,15 @@ function createPlaylist(pname, pshared){
 	});
 }
 
-function getMyPlaylists(id){
+function getMyPlaylists(){
 	$.ajax({
 		type: 'get',
-		url:'/users/' + id + '/playlists',
-		success: function(data){
+		url:'/user/playlists',
+		success: function(data, err){
 			console.log(data);
+			if(err){
+				console.log(err);
+			}
 		}
 	});
 }
@@ -40,8 +43,18 @@ function addVideoToPlaylist(playlist_id, vid_id, vid_name){
 	});
 }
 
-$(document).ready(function(){
+function addPlaylistToUser(name, shared){
+	$.ajax({
+		type: 'post',
+		data: {'body':{'name': name, 'shared': shared}},
+		url: '/user/new/playlist',
+		success: function(data){
+			console.log(data);
+		}
+	});
+}
 
+$(document).ready(function(){
 
 
 
@@ -49,6 +62,7 @@ $(document).ready(function(){
 	var height = $(window).height();
 	console.log(width);
 	console.log(height);
+	var test;
 
 	function createVideo(id){
 		$('#ytplayer').attr('class', 'video-frame');
@@ -69,77 +83,127 @@ $(document).ready(function(){
 	$('#login-button').click(function() {
 		leftValue -= (width - 0);
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
-  	});	
+	});	
 */
 
-  	$('.roomLI').click(function() {
-  		leftValue -= (width - 0);
-/*   		leftValue -= Math.floor(width) */
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-  	});
-  	
-  	$('#backButton').click(function() {
-  		leftValue += (width - 0);
-  		console.log(leftValue);
-	  	$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
-  	});
+	//Code for the div to add a room
+	//==========================================================
+	$('#addRoomButton').click(function(){
+		var tempTop =  0.2*height;
+		$('#createRoom').css({top: tempTop});
+	});
+
+	$('#createRoomButton').click(function(){
+		if($('#roomName').val()!== ""){
+			var tempRoom = $('#roomName').val();
+			clientCreateRoom(tempRoom);
+			leftValue -= (width - 0);
+			$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+			$('#createRoom').css({top: -300});
+			$('#'+ $('#roomName').val()).addClass('depressed');
+			$('#roomName').val("");
+		}else {
+			$('#errorRoom').html('Please enter a different room name');
+		}
+	});
+
+	//Add the code for the cancel out of the menu
+
+	//==========================================================
+
+
+	$('#rooms').on('click', '.roomLI', function() {
+		leftValue -= (width - 0);
+		/*leftValue -= Math.floor(width) */
+		console.log(leftValue);
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+		$(this).addClass('depressed');
+	});
+
+	$('#backButton').click(function() {
+		leftValue += (width - 0);
+		console.log(leftValue);
+		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+	});
   	 	
  	 	
   	//search menu
   	$('#searchVideo').click(function() {
 		leftValue -= (width - 0);
- 	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
- 	  	console.log("done");
-  	});    	 	
-  	 	
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
+		console.log("done");
+	});    	 	
+		
 	$('#searchDone').click(function() {
 		leftValue += (width - 0);
- 	  	$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
- 	  	console.log("done");
- 	  	});  	 	
-  	 	
-  	
-  	
-  	
-  	
-  	
-  	$('#searchMenuButton').click(function() {
-	  	topValue -= height;
-	  	$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
-	  	$('#playlist-wrapper').css({zIndex: 0});
-	  	$('#searchContainer').css({zIndex: 100});
-  	});
-
-  	$('#search-button').click(function() {
-	  	search($('#query').val());
-  	});
-  	
-
-  	
+		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'}); 	
+		console.log("done");
+		});  	 	
+		
 	
-  	
-  	$('#playListMenuButton').click(function(){
-	  	topValue -= height;
-	  	$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
-	  	$('#searchContainer').css({zIndex: 0});
-	  	$('#playlist-wrapper').css({zIndex: 100});
-  	});
-  	
-  	var playerHeightRatio = 0.5;
-  	var menuPercentage = .10;	
-  	var playerTop  = (playerHeightRatio * height) + (menuPercentage * height) ; 
-  	var down = false;
-  	$('#playerButton').click(function(){
-  	console.log(playerTop);
-	  	if(down === false) {
-		  	$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute'});
-		  	down =true;
+	
+	
+	
+	
+	$('#searchMenuButton').click(function() {
+		topValue -= height;
+		$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
+		$('#playlist-wrapper').css({zIndex: 0});
+		$('#searchContainer').css({zIndex: 100});
+	});
+
+	$('#search-button').click(function() {
+		search($('#query').val());
+	});
+	
+
+  
+  
+	
+	$('#playListMenuButton').click(function(){
+		topValue -= height;
+		$('#canvasDiv').css({top: topValue, left: leftValue, position: 'absolute'});
+		$('#searchContainer').css({zIndex: 0});
+		$('#playlist-wrapper').css({zIndex: 100});
+	});
+	
+	
+	var playerHeightRatio = 0.5;
+	var menuPercentage = .10;	
+	var playerTop  = (playerHeightRatio * height) + (menuPercentage * height) ; 
+	var down = false;
+	
+	$('#playerButton').click(function(){
+	console.log(playerTop);
+		if(down === false) {
+			$('#playListDiv').css({bottom: - playerTop, left: 0, position: 'absolute', img: 'img/plus.png'});
+			$('#player').attr('src','img/playerGlow.png');
+				down =true;
 		} else {
 			$('#playListDiv').css({bottom: 0, left: 0, position: 'absolute'});
-		  	down =false;
+			$('#player').attr('src','img/player.png');
+
+			down =false;
 		}
-  	})
+	})
+	
+	$('#searchResults').on('click', '.video-result-wrapper', function(){
+		 // console.log(this);
+		 // console.log($(this));
+		 // console.log($(this).find('.add'));
+		 // console.log($(this).find('.add img'));
+
+		//Moved the code to call addVideo (adding a video to the socket playlist) out of the
+		//search.js file because the click function wasn't getting bound to the .video-result-wrapper
+		//since the dom objects didnt exist yet.  This is actually better because
+		//then we can have a different addVideo script in the player.js for a single person
+
+		$(this).find('.add img').attr('src', 'img/check.png');
+		var videoData = $(this).data();
+		addVideo(videoData);
+
+	});
+	
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);

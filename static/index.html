@@ -1,7 +1,6 @@
 <html>
 <head>
 	<title></title>
-
 <!--
 	<link rel="stylesheet" media="all" href="css/styles.less" />
 	<link rel="stylesheet" media="only screen and (max-width: 800px)" href="css/styles.less" />
@@ -10,9 +9,6 @@
 	<link rel="stylesheet/less" type="text/css" href="css/styles.less" />
 	<link rel='stylesheet' type='text/css' href='css/style.css'>
 	<link href='http://fonts.googleapis.com/css?family=Noto+Sans:400,700,400italic,700italic' rel='stylesheet' type='text/css'>  	
-	<script src="/socket.io/socket.io.js"></script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>
-    <script type="text/javascript" src="js/handlebars-1.0.rc.1.min.js"></script>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 	
 	
@@ -20,7 +16,6 @@
  	<body>
  	<div id="phoneContainer">
  		<div id="canvasDiv">
-		 		
 			<!-- <div id="center-box"></div> -->
 
 			<!--Login screen-->
@@ -42,33 +37,35 @@
 			<!--home screen -->
 			<div id="home-screen">
 				<div id="homeMenu">
-					<img class="leftIcon" src="menu.png"/>
-					<img class="centerIcon" src="room.png"/>
-					<img class="rightIcon" src="plus.png"/>	
+					<img class="leftIcon" src="img/menu.png"/>
+					<img class="centerIcon" src="img/room.png"/>
+					<img id="addRoomButton" class="rightIcon" src="img/plus.png"/>	
 				</div>
 				<ul id="rooms">
-					<li class="roomLI" id="room1">
-						<a href="#" onclick=clientJoinRoom('room1')>Room1</a>
+					<li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
+						<a href="#" >Room1</a>
 					</li>
-					<li class="roomLI" id="room2">
-						<a href="#" onclick=clientJoinRoom('room2')>Room2</a>
-					</li>
-					<li class="roomLI" id="create">
-						<input id="roomName" val=""></input>
-						<button href="#" onclick=clientCreateRoom($("#roomName").val())>Create Room</button>
+					<li class="roomLI" id="room2" onclick=clientJoinRoom('room2')>
+						<a href="#" >Room2</a>
 					</li>
 				</ul>
 				<!-- <div id="rooms"></div> -->
+
+				<!-- Need to add a cancel button, maybe an x in the corner -->
+				<div id="createRoom">
+					<input id="roomName" val=""></input>
+					<div id="createRoomButton">Create Room</div>
+					<div id="errorRoom"></div>
+				</div>
 			</div>
 			
-
 
 			<!--The Room container-->	
 			<div id="room">
 				<div id="roomMenu">
-				<a id="searchVideo"><img class="rightIcon" src="plus.png"/></a>
-				<a id="playerButton"><img class="icon" src="player.png"/></a>				
-				<a id="backButton"><img class="leftIcon" src="back.png"/></a>									
+				<a id="searchVideo"><img class="rightIcon" src="img/plus.png"/></a>
+				<a id="playerButton"><img class="icon" id="player" src="img/player.png"/></a>				
+				<a id="backButton"><img class="leftIcon" src="img/back.png"/></a>									
 			</div>
 				<!--Video Screen-->
 
@@ -82,12 +79,12 @@
 						</div>
 						
 						<div id="ytButtons">
-							<a id="previous"><img src="previous.png"/></a>	
-							<a id="stop"><img src="stop.png"/></a>
-							<a id="pause"><img src="pause.png"/></a>
-							<a id="play"><img src="play.png"/></a>							
-							<a id="next"><img src="next.png"/></a>
-							<a id="mute"><img src="mute.png"/></a>			
+							<a id="previous"><img src="img/previous.png"/></a>	
+							<a id="stop"><img src="img/stop.png"/></a>
+							<a id="pause"><img src="img/pause.png"/></a>
+							<a id="play"><img src="img/play.png"/></a>							
+							<a id="next"><img src="img/next.png"/></a>
+							<a id="mute"><img src="img/mute.png"/></a>			
 						</div>
 						
 <!--
@@ -109,10 +106,25 @@
 	-->
 					
 						<div id="buttons"></div>
-						<div id='playlist'></div>					
+						<div id='playlist'></div>
+							
+							<script id="playlistTemplate" type="text/x-handlebars-template">
+								
+								<div class="video-result-wrapper" data-id="{{id}}" data-title="{{title}}" data-thumbnail="{{thumbnail}}" >
+									<div class="thumbnail">
+										<img src="{{thumbnail}}">
+									</div>
+									<div class="search-title"> {{title}} </div>
+			<!-- 						<p class="search-id"> {{id}}</p> -->
+								</div>	
+							
+											
+							</script>
+
+
+						</div>					
 					
 						
-					</div>
 					
 
 					
@@ -126,9 +138,9 @@
 				<div id="searchContainer">
 				
 				<div id="videoSearchMenu">
-			      <a id="search-button"><img class="rightIcon" src="search.png"/></a>
+			      <a id="search-button"><img class="rightIcon" src="img/search.png"/></a>
 			      <input id="query" value='' type="text"/>
-			      <a id="searchDone"><img class="leftIcon" src="back.png"/></a>
+			      <a id="searchDone"><img class="leftIcon" src="img/back.png"/></a>
 			    </div>	
 			    
 
@@ -142,12 +154,18 @@
 				<script id="myTemplate" type="text/x-handlebars-template">
 					
 					{{#each items}}
-					<div class="video-result-wrapper" data-id="{{id.videoId}}">
+					<div class="video-result-wrapper" data-id="{{id.videoId}}" data-title="{{snippet.title}}" data-thumbnail="{{snippet.thumbnails.default.url}}" >
 						<div class="thumbnail">
 							<img src="{{snippet.thumbnails.default.url}}">
 						</div>
-						<h2 class="search-title"> {{snippet.title}} </h2>
-						<p class="search-id"> {{id.videoId}}</p>
+						<div class="search-title"> {{snippet.title}} 
+						<p>comment count: {{stats.commentCount}}
+						dislike count: {{stats.dislikeCount}}
+						like count: {{stats.likeCount}}
+						view count: {{stats.viewCount}}</p></div>
+						<div class="add">
+							<img src="img/add.png">
+						</div>
 					</div>	
 					{{/each}}	
 								

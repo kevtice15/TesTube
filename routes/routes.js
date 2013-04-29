@@ -145,12 +145,19 @@ app.io.route('rooms', {
 
 
 	//My Routes
-	app.get('/users/:id/playlists', function(request, response){
+	app.post('/users/:id/new/playlist', function(request, response){
+		users.addPlaylist(request, response);
+	});
+	app.get('/user/playlists', function(request, response){
 		users.retrievePlaylists(request, response);
 	});
 
 	app.post('/playlists/new/video/:id', function(request, response){
 		playlists.addVideo(request, response);
+	});
+
+	app.post('/user/new/playlist', function(request, response){
+		users.addPlaylist(request, response);
 	});
 };
 
