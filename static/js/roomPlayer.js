@@ -132,6 +132,7 @@ $(document).ready(function(){
 		leftValue += (width - 0);
 		console.log(leftValue);
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+		disconnectFromRoom();
 	});
   	 	
  	 	

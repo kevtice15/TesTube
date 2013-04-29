@@ -238,6 +238,12 @@ input {
 	a {
 		color: white;
 	}
+	nav{
+		display: table;
+		width: 100%;
+		border-collapse: none;
+		border: none;
+	}
 }
 
 #homeMenu {
@@ -263,9 +269,10 @@ input {
 #rooms {
 	position: relative;
 	background-color: @backgroundColor;
+	display: table-row;
 	
 	li {
-
+		// display: table-cell;
 		.borderStyle;
 		font-family: @buttonFont;
 		font-weight: @buttonWeight;
@@ -273,6 +280,7 @@ input {
 		color: white;
 		line-height: 100%;
 		padding: 1em 1em 1em 1em;
+		text-align: center;
 
 		height: 3%;
 		
@@ -315,6 +323,7 @@ input {
 		height: 2em;
 		border: 1px solid #2d2d2d;
 		padding-top: .5em;
+		cursor: hand;
 		&:hover{
 			background-color: #00a2ff;
 			color: white;
@@ -327,6 +336,7 @@ input {
 		img {
 			height: 30px;
 			width: 30px;
+			cursor: hand;
 			&:hover{
 				background-color: #00a2ff;
 			}

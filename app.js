@@ -352,18 +352,21 @@ app.io.sockets.on("connection", function(socket) {
 		});
 
 		// join room
-		socket.join(room.room_name);
+		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
 		//console.log('newRoom', newRoom);
 		//user.update({'data': {'room_id'}, })
-		console.log("you joined: " + room.room_name);
+		console.log("you joined: " + roomname);
 		// echo to client they've connected
-		socket.emit('updatechat', 'you have connected to' + room.room_name);
+		socket.emit('updatechat', 'you have connected to' + roomname);
 		// echo to room 1 that a person has connected to their room
-		socket.broadcast.to(room.room_name).emit('updatechat',  ' has connected to this room');
+		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
 
-		
-		
+		console.log("Get room playlist: " + room.room_id);
+		Room.getPlaylist(room.room_id, function(playlist){
+			console.log("The Playlist: " + playlist);
+			socket.emit('populateRoom', playlist);
+		});
 	});
 
 
@@ -379,6 +382,9 @@ app.io.sockets.on("connection", function(socket) {
 			else{
 				console.log(updateUser);
 			}
+		});
+		updateUser.save(function(err){
+			console.log(err);
 		});
 		//TODO Delete room from db
 		var oldroom = socket.room;
