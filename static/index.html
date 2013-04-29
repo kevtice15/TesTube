@@ -17,7 +17,6 @@
  	<body>
  	<div id="phoneContainer">
  		<div id="canvasDiv">
-		 		
 			<!-- <div id="center-box"></div> -->
 
 			<!--Login screen-->
@@ -41,7 +40,7 @@
 				<div id="homeMenu">
 					<img class="leftIcon" src="img/menu.png"/>
 					<img class="centerIcon" src="img/room.png"/>
-					<img class="rightIcon" src="img/plus.png"/>	
+					<img id="addRoomButton" class="rightIcon" src="img/plus.png"/>	
 				</div>
 				<ul id="rooms">
 					<li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
@@ -50,12 +49,15 @@
 					<li class="roomLI" id="room2" onclick=clientJoinRoom('room2')>
 						<a href="#" >Room2</a>
 					</li>
-					<li class="roomLI" id="create">
-						<input id="roomName" val=""></input>
-						<button href="#" onclick=clientCreateRoom($("#roomName").val())>Create Room</button>
-					</li>
 				</ul>
 				<!-- <div id="rooms"></div> -->
+
+				<!-- Need to add a cancel button, maybe an x in the corner -->
+				<div id="createRoom">
+					<input id="roomName" val=""></input>
+					<div id="createRoomButton">Create Room</div>
+					<div id="errorRoom"></div>
+				</div>
 			</div>
 			
 
@@ -106,7 +108,7 @@
 	-->
 					
 						<div id="buttons"></div>
-						<div id='playlist'>
+						<div id='playlist'></div>
 							
 							<script id="playlistTemplate" type="text/x-handlebars-template">
 								
@@ -125,7 +127,6 @@
 						</div>					
 					
 						
-					</div>
 					
 
 					
