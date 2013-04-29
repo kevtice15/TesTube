@@ -1,6 +1,7 @@
 var socket;
-function clientJoinRoom(r){
-	socket = io.connect();
+
+function clientJoinRoom(r, room_id){
+	socket = io.connect(null,{'force new connection': true});
 	console.log('client join room ' + r);
 	var room = r;
 
@@ -13,8 +14,10 @@ function clientJoinRoom(r){
 	});
 
 	socket.on('connect', function(){
-		console.log('client connected');
-			socket.emit('joinRoom', room);
+		console.log('client connected join');
+
+		socket.emit('joinRoom', {room_name: room, room_id: room_id});
+		console.log("Join room emitted");
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
@@ -38,14 +41,13 @@ function clientJoinRoom(r){
 		//placeholder is the parent div
 		document.getElementById("playlist").innerHTML = template(data.body);
 
-
-	   // $("#playlist").append($("<li>").html(data.body.id));
-	   playlist.push(data.body.id);
-	   if(currentVideoId === null){
+		// $("#playlist").append($("<li>").html(data.body.id));
+		playlist.push(data.body.id);
+		if(currentVideoId === null){
 			player.cueVideoById(data.body.id);
 			currentVideoId = data.body.id;
 			currentVideoIndex = 0;
-	   }
+		}
 	});
 
 	socket.on('updateVideo', function(video){
@@ -67,6 +69,7 @@ function clientJoinRoom(r){
 		player.stopVideo();
 		player.clearVideo();
 	});
+
 }
 
 function clientLeaveRoom(){
@@ -76,13 +79,10 @@ function clientLeaveRoom(){
 }
 
 function clientCreateRoom(r){
-	
-	$('#rooms').prepend('<li onclick="clientJointRoom(\''+r+'\')"><a href="#" >' + r + '</a></li>');
-
 
 	//REDUNDANT CODE EXCEPT FOR A FEW THINGS......WILL WANT TO CREATE A ????
 
-	socket = io.connect();
+	socket = io.connect(null,{'force new connection': true});
 	console.log('client create room ' + r);
 	var room = r;
 
@@ -94,9 +94,14 @@ function clientCreateRoom(r){
 		}
 	});
 
+
 	socket.on('connect', function(){
 		console.log('client connected');
 			socket.emit('addRoom', room);
+	});
+
+	socket.on("write-room-id", function(data){
+		$('#rooms').prepend('<li class="roomLI" onclick="clientJoinRoom(\''+ r + '\', ' + '\'' + data.room_id + '\')" data-id="' + data.room_id + '"><a href="#" >' + r + '</a></li>');
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
@@ -113,13 +118,13 @@ function clientCreateRoom(r){
 	});
 	
 	socket.on("newVideo", function(data) {
-	   $("#playlist").append($("<li>").html(data.body));
-	   playlist.push(data.body);
-	   if(currentVideoId === null){
+		$("#playlist").append($("<li>").html(data.body));
+		playlist.push(data.body);
+		if(currentVideoId === null){
 			player.cueVideoById(data.body);
 			currentVideoId = data.body;
 			currentVideoIndex = 0;
-	   }
+		}
 	});
 
 	socket.on('updateVideo', function(video){
@@ -141,12 +146,16 @@ function clientCreateRoom(r){
 		player.stopVideo();
 		player.clearVideo();
 	});
+
+	socket.on('roomDoneCreated', function(){
+		socket.disconnect();
+	});
 }
 
 // function addVideo(id){
 function addVideo(videoData){
 	// socket.emit('videoAdded', {body: id });
-	socket.emit('videoAdded', {body: videoData });
+	socket.emit('videoAdded', {body: videoData});
 }
 
 function updateVideo(videoToPlay){

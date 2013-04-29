@@ -232,7 +232,7 @@ db.once('open', function callback() {
 
 
 
-var server = app.listen(8889);
+app.listen(8889);
 console.log('Express listening on port 8889');
 
 
@@ -259,45 +259,93 @@ var roomState = {
 
 
 app.io.sockets.on("connection", function(socket) {
-
 	console.log('SERVER CONNECTION!@@@@@@@@@@@@@@@@@@@@@@@@@@');
-
+	
+	//console.log(socket);
+	
 	socket.on('addRoom', function(roomname){
+		console.log("Add room start");
 		var user = socket.handshake.session.passport.user;
 		//create new room in db
 		var newRoom = new Room({'name': roomname, 'DJ': user});
-		var updateUser = mongoose.model('UserSchema');
-		
-		//Attach user to room they just joined
-		updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
+		newRoom.save(function(err, newRoom){
 			if(err){
-				console.log(err);
+				console.error(err);
 			}
 			else{
-				console.log(updateUser);
+				console.log(newRoom);
 			}
 		});
+		socket.handshake.session.passport.room = newRoom._id;
+		console.log(socket.handshake.session.passport);
+		socket.emit('write-room-id', {room_id: newRoom._id});
 		//socket.emit('rooms:create', {body:{name: roomname}});
 		//rooms.create({name: roomname});
+		//socket.emit('roomDoneCreated');
+		console.log("Add room end");
 	});
 
 
-	socket.on('joinRoom', function(roomname){
+	socket.on('joinRoom', function(room){
 		// store the room name in the socket session for this client
-		socket.room = roomname;
+		console.log("HOW BOUT THIS JOIN ROOM ENTRY");
+		socket.room = room.room_name;
+		var roomname = room.room_name;
+		var room_Id = room.room_id;
 		var user = socket.handshake.session.passport.user;
-		var updateUser = mongoose.model('UserSchema');
-		
-		// TODO Attach user to room they just joined
-		// updateUser.findByIdAndUpdate(user, {room_id: newRoom.id}, function(err, updateUser){
-		// 	if(err){
-		// 		console.log(err);
-		// 	}
-		// 	else{
-		// 		console.log(updateUser);
-		// 	}
-		// });
+		//var room = socket.handshake.session.passport.room;
+		console.log(socket.handshake.session.passport);
+		var Room = mongoose.model('Room');
+		var Playlist = mongoose.model('Playlist');
+		var User = mongoose.model('UserSchema');
 
+		Room.findById(room_Id, function(err, room){
+			//if the room exists
+			if(room !== null){
+				//Add user
+				User.joinRoom(user, room._id, function(upUser){
+					console.log(upUser);
+				});
+				//Create playlist
+				var playlist = new Playlist({
+					creator: user,
+					shared: true,
+					name: roomname,
+					dj: user
+				});
+				playlist.save(function(err){
+					if(err){
+						console.error(err);
+					}
+				});
+				//Add playlist
+				room.addPlaylist(room._id, playlist._id, function(room){
+					console.log("added playlist to room", room);
+				});
+			}
+			//if it doesn't exist
+			else{
+				//create it with a new playlist
+				var newRoom = new Room({
+					name: roomname,
+					DJ: user,
+					playlist: new Playlist({
+						creator: user,
+						shared: true,
+						name: roomname,
+						dj: user
+					})
+				});
+				newRoom.save(function(err){
+					console.error(err);
+				});
+				// add the user to it
+				User.joinRoom(user, newRoom._id, function(upUser){
+					console.log(upUser);
+				});
+			}
+		});
+		
 		// join room
 		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
@@ -316,9 +364,10 @@ app.io.sockets.on("connection", function(socket) {
 
 	socket.on('disconnect', function(){
 		var updateUser = mongoose.model('UserSchema');
-		
+		var user = socket.handshake.session.passport.user;
+
 		//Attach user to room they just joined
-		updateUser.findByIdAndUpdate(user, {room_id:''}, function(err, updateUser){
+		updateUser.findByIdAndUpdate(user, {room_id: null}, function(err, updateUser){
 			if(err){
 				console.log(err);
 			}
@@ -335,6 +384,19 @@ app.io.sockets.on("connection", function(socket) {
 	});
 
 	socket.on('videoAdded', function(data){
+		console.log('videoAddedData', data);
+		var user = socket.handshake.session.passport.user;
+		var Playlist = mongoose.model('Playlist');
+		var User = mongoose.model("UserSchema");
+
+		User.getPlaylists(user, function(playlists){
+			for(var i = 0; i < playlists.length; i++){
+			///	if(playlists[i].name === )
+			}
+		});
+
+		Playlist.find({})
+
 		socket.emit('status', {success: 'true'});
 		app.io.sockets.in(socket.room).emit('newVideo', { body: data.body });
 		roomState.playlist.push(data.body.id);
@@ -368,8 +430,6 @@ app.io.sockets.on("connection", function(socket) {
 	});
 
 });
-
-var justDeleteMe;
 
 function socketEventLog(log){
 	console.log("[Socket emit] - ", log);

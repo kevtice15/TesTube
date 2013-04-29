@@ -71,14 +71,17 @@ Room.methods.changeState = function(roomId, newState){
 	});
 };
 
-Room.methods.addPlaylist = function(roomId, playlistId){
+Room.methods.addPlaylist = function(roomId, playlistId, callback){
 	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, Room){
+	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(Room);
+			room.save(function(err){
+				console.error(err);
+			});
+			callback(room);
 		}
 	});
 };
