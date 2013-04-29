@@ -118,8 +118,7 @@ UserSchema.statics.joinRoom = function(userId, roomId, callback){
 };
 
 UserSchema.statics.leaveRoom = function(userId, roomId){
-	var User = mongoose.model('User');
-	User.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
+	this.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
 		if(err){
 			console.log(err);
 		}

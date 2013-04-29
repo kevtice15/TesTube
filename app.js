@@ -331,7 +331,7 @@ app.io.sockets.on("connection", function(socket) {
 						console.error(err);
 					}
 				});
-				
+
 				var newRoom = new Room({
 					name: roomname,
 					DJ: user,
@@ -348,7 +348,21 @@ app.io.sockets.on("connection", function(socket) {
 					console.log(upUser);
 				});
 			}
-		});
+
+		// join room
+		socket.join(roomname);
+		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
+		//console.log('newRoom', newRoom);
+		//user.update({'data': {'room_id'}, })
+		console.log("you joined: " + roomname);
+		// echo to client they've connected
+		socket.emit('updatechat', 'you have connected to' + roomname);
+		// echo to room 1 that a person has connected to their room
+		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
+
+
+
+	});
 		
 		// join room
 		socket.join(roomname);

@@ -15,8 +15,8 @@ function clientJoinRoom(r, room_id){
 
 	socket.on('connect', function(){
 		console.log('client connected join');
-
-		socket.emit('joinRoom', {room_name: room, room_id: room_id});
+		console.log("Preparing to emit", r, room_id);
+		socket.emit('joinRoom', {room_name: r, room_id: room_id});
 		console.log("Join room emitted");
 	});
 
@@ -81,10 +81,6 @@ function clientLeaveRoom(){
 }
 
 function clientCreateRoom(r){
-	
-	$('#rooms').prepend('<li class="roomLI" id="'+r+'" onclick="clientJointRoom(\''+r+'\')"><a href="#" >' + r + '</a></li>');
-
-
 	//REDUNDANT CODE EXCEPT FOR A FEW THINGS......WILL WANT TO CREATE A ????
 
 	socket = io.connect(null,{'force new connection': true});
