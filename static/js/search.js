@@ -107,7 +107,7 @@ function search() {
 	var source = document.getElementById("myTemplate").innerHTML;
 	var template = Handlebars.compile(source);	
 	document.getElementById("searchResults").innerHTML = template(response);
-*/
+
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
 	//var template2 = Handlebars.compile(source2);
