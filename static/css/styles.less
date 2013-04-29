@@ -290,6 +290,45 @@ input {
 		.top-bottom-inset-shaddow;
 }
 
+#createRoom {
+	position: absolute;
+	top: -300px;
+	left: 20%;
+	display: inline-block;
+	width: 60%;
+	min-width: 200px;
+	margin: 0 auto;
+	background-color: rgba(240,240,240,0.9);
+	text-align: center;
+	input, #createRoomButton, #errorRoom {
+		display: block;
+		margin: 0 auto;
+		margin-top: 2em;
+		margin-bottom: 2em;
+	}
+	#createRoomButton {
+		text-align: center;
+		font-family: @buttonFont;
+		width: 30%;
+		min-width: 150px;
+		height: 2em;
+		border: 1px solid #2d2d2d;
+		padding-top: .5em;
+		&:hover{
+			background-color: #00a2ff;
+			color: white;
+		}
+	}
+
+	-moz-transition:ease-in-out .5s;
+	-webkit-transition:ease-in-out .5s;
+	-ms-transition:ease-in-out .5s;
+	-o-transition:ease-in-out .5s;
+	transition:ease-in-out .5s;
+}
+
+
+
 
 /* room screen */
 #room {
