@@ -44,56 +44,47 @@ function search() {
    });
 */
 
+	var source = document.getElementById("myTemplate").innerHTML;
+	var template = Handlebars.compile(source);	
 
-	 var statsObject = [];
+	var newObject = response; 
 
-//MINE
     //loop through results and create a json object from id for the dom
+    var statsObject = [];
+    var count = response.items.length;
     $.each(response.items, function(i){
-	    var statsObject = [];
-
 		var contentRequest = gapi.client.youtube.videos.list({
 			id: response.items[i].id.videoId,
 			part: 'statistics'
     	});
 
-    	contentRequest.execute(function(response){
-	    	var stringify = JSON.stringify(response);  
-	    	console.log("view count below");
-	    	console.log(response.items[0].statistics);     
+    	contentRequest.execute(function(response) {
+	    	//console.log(response.items[0].statistics);     
  			statsObject.push(response.items[0].statistics); 
-
+ 			
+/*  			console.log(newObject.items[i]); */
+ 			newObject.items[i].stats = response.items[0].statistics;
+ 			
+ 			
+ 			count--;
+ 			if (count == 0) {
+	    		console.log(newObject);
+	    		document.getElementById("searchResults").innerHTML = template(newObject);
+	    	}	    
      	});
      	
-     		console.log("stats object below");
-	console.log(statsObject);
      	
+     	
+     });
+     
+     
+     var stringify = JSON.stringify(newObject);  
+/*     console.log(stringify); */
+	
 /*
-     	console.log("content request");
-     	console.log(contentRequest);
+	$.each(response.items, function(i){
+	})
 */
-     		
-/*      	statsObject.push(contentRequest); */
-/*      	console.log(contentRequest);	     */
-	});
-	
-	
-	
-	
-	
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -116,25 +107,17 @@ function search() {
    });	
 */ 
    
-	    
-	    
-	    
-	    
-	    
-	    
+  
 	    
     //clear the search results continer first
    // $('#searchResults').html('');
     
-    //mytemplate is the the template script to compile
+   //HANDLEBARS
+/*
 	var source = document.getElementById("myTemplate").innerHTML;
 	var template = Handlebars.compile(source);	
-	//placeholder is the parent div
 	document.getElementById("searchResults").innerHTML = template(response);
-/* 	console.log(str); */
-
-
-
+*/
 
 	//var source2 = document.getElementById("myTemplate2").innerHTML;
 	//var template2 = Handlebars.compile(source2);
@@ -160,14 +143,6 @@ function search() {
 		//document.getElementById("playlist-wrapper").innerHTML = template2(data);		
 		$('#playlist-wrapper').after('');
 	});    
-
-
-
-
-
-
-
-
 
 
 
