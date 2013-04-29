@@ -88,11 +88,16 @@ $(document).ready(function(){
 
 	//Code for the div to add a room
 	//==========================================================
+	//When you click the plus icon in the top right corner the modal comes down
 	$('#addRoomButton').click(function(){
 		var tempTop =  0.2*height;
 		$('#createRoom').css({top: tempTop});
 	});
 
+	/*
+		When you click the create room button, create and join the room
+		if a room name has been entered. If not, display error msg.
+	*/
 	$('#createRoomButton').click(function(){
 		if($('#roomName').val()!== ""){
 			var tempRoom = $('#roomName').val();
@@ -107,7 +112,10 @@ $(document).ready(function(){
 		}
 	});
 
-	//Add the code for the cancel out of the menu
+	//Click the x icon to close the menu
+	$('#closeMenu').click(function(){
+		$('#createRoom').css({top: -300});
+	});
 
 	//==========================================================
 
