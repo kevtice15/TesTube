@@ -428,6 +428,9 @@ app.io.sockets.on("connection", function(socket) {
 	socket.on('playPause', function(data){
 		console.log("server received playpause: " +  data.state + " at " + data.time);
 		// socket.broadcast.to('room1').emit('update', data);
+		
+		var Room = mongoose.model('Room');
+
 		app.io.sockets.in(socket.roomname).emit('update', {state: data.state, time: data.time});
 	});
 

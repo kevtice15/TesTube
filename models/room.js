@@ -7,7 +7,8 @@ var Room = new mongoose.Schema({
 	state:{
 		currentVideoTime: Number,
 		currentVideoId: String,
-		currentVideoPlaylistIndex: Number
+		currentVideoPlaylistIndex: Number,
+		currentVideoState: String
 	}
 });
 
@@ -47,29 +48,41 @@ Room.methods.getState = function(roomId, callback){
 	});
 };
 
-Room.methods.changeDJ = function(roomId, dj_id, callback){
+Room.methods.changeState = function(roomId, newState){
 	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, Room){
+	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
+			room.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
+			callback(room);
+		}
+	});
+};
+
+Room.methods.changeDJ = function(roomId, dj_id, callback){
+	var Room = mongoose.model('Room');
+	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			room.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
 			callback(Room);
 		}
 	});
 };
 
-Room.methods.changeState = function(roomId, newState){
-	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, Room){
-		if(err){
-			console.log(err);
-		}
-		else{
-			callback(Room);
-		}
-	});
-};
+
 
 Room.methods.addPlaylist = function(roomId, playlistId, callback){
 	var Room = mongoose.model('Room');
