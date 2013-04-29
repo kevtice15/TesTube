@@ -280,7 +280,6 @@ app.io.sockets.on("connection", function(socket) {
 		console.log("Add room end");
 	});
 
-
 	socket.on('joinRoom', function(room){
 		// store the room name in the socket session for this client
 		console.log("HOW BOUT THIS JOIN ROOM ENTRY");
