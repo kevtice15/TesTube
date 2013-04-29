@@ -192,7 +192,16 @@ $(document).ready(function(){
 		 // console.log($(this));
 		 // console.log($(this).find('.add'));
 		 // console.log($(this).find('.add img'));
+
+		//Moved the code to call addVideo (adding a video to the socket playlist) out of the
+		//search.js file because the click function wasn't getting bound to the .video-result-wrapper
+		//since the dom objects didnt exist yet.  This is actually better because
+		//then we can have a different addVideo script in the player.js for a single person
+
 		$(this).find('.add img').attr('src', 'img/check.png');
+		var videoData = $(this).data();
+		addVideo(videoData);
+
 	});
 	
 
