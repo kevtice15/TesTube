@@ -97,7 +97,8 @@ $(document).ready(function(){
 
 	$('#createRoomButton').click(function(){
 		if($('#roomName').val()!== ""){
-			clientCreateRoom($("#roomName").val());
+			var tempRoom = $('#roomName').val();
+			clientCreateRoom(tempRoom);
 			leftValue -= (width - 0);
 			$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
 			$('#createRoom').css({top: -300});
