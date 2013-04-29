@@ -12,11 +12,12 @@ function search() {
   var q = $('#query').val();
   var request = gapi.client.youtube.search.list({
     q: q,
-    // maxResults: 10
+    maxResults: 10,
+    // order: 'viewCount',
     // part: 'snippet(title, description, thumbnails)'
     fields: 'items(id(videoId), snippet(title, thumbnails))',
     part: 'snippet'
-});
+	});
 
   request.execute(function(response) {
     var str = JSON.stringify(response.result);
@@ -116,10 +117,10 @@ function search() {
 	//var template2 = Handlebars.compile(source2);
 
 	//click
-	$('.video-result-wrapper').click(function(){
+	$('.video-result-wrapper').on('click', function(){
 		// var id = $(this).data('id');
     var videoData = $(this).data();
-    // console.log(videoData);
+    console.log("searchJS videodata:" + videoData);
     // var title = $(this).data-title;
     // var thumbnail = $(this).data-thumbnail;
 

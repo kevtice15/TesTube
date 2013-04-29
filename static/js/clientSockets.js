@@ -168,6 +168,7 @@ function clientCreateRoom(r){
 // function addVideo(id){
 function addVideo(videoData){
 	// socket.emit('videoAdded', {body: id });
+	console.log("client add video to playlist:" + videoData);
 	socket.emit('videoAdded', {body: videoData});
 }
 
