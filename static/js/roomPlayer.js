@@ -51,7 +51,7 @@ function addPlaylistToUser(name, shared){
 		success: function(data){
 			console.log(data);
 		}
-	})
+	});
 }
 
 $(document).ready(function(){
@@ -84,8 +84,6 @@ $(document).ready(function(){
 		leftValue -= (width - 0);
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
 	});	
-
-
 */
 
 	//Code for the div to add a room

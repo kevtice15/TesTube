@@ -22,7 +22,7 @@ User.on('index', function(err){
 */
 
 //Associates a user with a playlist
-UserSchema.methods.addPlaylist = function(user, data, resp){
+UserSchema.methods.addPlaylist = function(user, data, callback){
 	var Playlist = mongoose.model('Playlist');
 	var newPlaylist = new Playlist({creator: user, DJ: user, shared: data.body.shared, name: data.body.name});
 	newPlaylist.save(function(err){
@@ -31,7 +31,7 @@ UserSchema.methods.addPlaylist = function(user, data, resp){
 		}
 	});
 	console.log(newPlaylist);
-	resp(newPlaylist);
+	callback(newPlaylist);
 
 
 /*
@@ -41,19 +41,19 @@ UserSchema.methods.addPlaylist = function(user, data, resp){
 		dj: this._id
 	};
 	console.log(this._id);
-	Plist.findByIdAndUpdate(playlistId, {$set: fields}, function(err, resp){
+	Plist.findByIdAndUpdate(playlistId, {$set: fields}, function(err, callback){
 		if(err){
 			console.log(err);
 		}
 		else{
-			console.log("Updated playlist", resp);
+			console.log("Updated playlist", callback);
 		}
 	});
 	console.log("Added creator and dj: ", user);
 */
 };
 
-UserSchema.deletePlaylist = function(user, playlist, resp){
+UserSchema.deletePlaylist = function(user, playlist, callback){
 	var Playlist = mongoose.model('Playlist');
 	
 	Playlist.findByIdAndRemove(playlist, function(err, Playlist){
@@ -71,21 +71,21 @@ UserSchema.deletePlaylist = function(user, playlist, resp){
 		}
 	});
 	console.log(newPlaylist);
-	resp(newPlaylist);
+	callback(newPlaylist);
 	*/
 };
 
 //Returns array of all playlists associated with a user id
-UserSchema.methods.getPlaylists = function(user, resp){
+UserSchema.statics.getPlaylists = function(user, callback){
 	var playlists = mongoose.model("Playlist");
 	playlists.find({creator: user},{}, function(err, docs){
 		console.log(docs);
-		resp(docs);
+		callback(docs);
 	});
 };
 
 
-UserSchema.methods.isDJ = function(userId, resp){
+UserSchema.methods.isDJ = function(userId, callback){
 	/*
 	var findUser = mongoose.model("UserSchema");
 	findUser.findOne({_id: userId}, function(err, user){
@@ -99,26 +99,32 @@ UserSchema.methods.isDJ = function(userId, resp){
 */
 };
 
-UserSchema.methods.joinRoom = function(userId, roomId, resp){
-	var User = mongoose.model('User');
-	User.findByIdAndUpdate(userId, {room_id: roomId}, function(err, User){
+UserSchema.statics.joinRoom = function(userId, roomId, callback){
+	this.findByIdAndUpdate(userId, {room_id: roomId}, function(err, user){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(User);
+			user.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
+			callback(user);
 		}
 	});
+
+
 };
 
-UserSchema.methods.leaveRoom = function(userId, roomId){
+UserSchema.statics.leaveRoom = function(userId, roomId){
 	var User = mongoose.model('User');
 	User.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(User);
+			callback(User);
 		}
 	});
 };

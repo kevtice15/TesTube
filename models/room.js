@@ -7,78 +7,94 @@ var Room = new mongoose.Schema({
 	state:{
 		currentVideoTime: Number,
 		currentVideoId: String,
-		currentVideoPlaylistIndex: Number
+		currentVideoPlaylistIndex: Number,
+		currentVideoState: String
 	}
 });
 
-Room.methods.getDJ = function(roomId, resp){
+Room.methods.getDJ = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.DJ);
+			callback(room.DJ);
 		}
 	});
 };
 
-Room.methods.getPlaylist = function(roomId, resp){
+Room.statics.getPlaylist = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.playlist);
+			callback(room.playlist);
 		}
 	});
 };
 
-Room.methods.getState = function(roomId, resp){
+Room.methods.getState = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.state);
-		}
-	});
-};
-
-Room.methods.changeDJ = function(roomId, dj_id, resp){
-	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, Room){
-		if(err){
-			console.log(err);
-		}
-		else{
-			resp(Room);
+			callback(room.state);
 		}
 	});
 };
 
 Room.methods.changeState = function(roomId, newState){
 	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, Room){
+	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(Room);
+			room.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
+			callback(room);
 		}
 	});
 };
 
-Room.methods.addPlaylist = function(roomId, playlistId){
+Room.methods.changeDJ = function(roomId, dj_id, callback){
 	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, Room){
+	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(Room);
+			room.save(function(err){
+				if(err){
+					console.error(err);
+				}
+			});
+			callback(Room);
+		}
+	});
+};
+
+
+
+Room.methods.addPlaylist = function(roomId, playlistId, callback){
+	var Room = mongoose.model('Room');
+	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, room){
+		if(err){
+			console.log(err);
+		}
+		else{
+			room.save(function(err){
+				console.error(err);
+			});
+			callback(room);
 		}
 	});
 };
