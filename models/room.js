@@ -11,50 +11,50 @@ var Room = new mongoose.Schema({
 	}
 });
 
-Room.methods.getDJ = function(roomId, resp){
+Room.methods.getDJ = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.DJ);
+			callback(room.DJ);
 		}
 	});
 };
 
-Room.methods.getPlaylist = function(roomId, resp){
+Room.statics.getPlaylist = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.playlist);
+			callback(room.playlist);
 		}
 	});
 };
 
-Room.methods.getState = function(roomId, resp){
+Room.methods.getState = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(room.state);
+			callback(room.state);
 		}
 	});
 };
 
-Room.methods.changeDJ = function(roomId, dj_id, resp){
+Room.methods.changeDJ = function(roomId, dj_id, callback){
 	var Room = mongoose.model('Room');
 	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, Room){
 		if(err){
 			console.log(err);
 		}
 		else{
-			resp(Room);
+			callback(Room);
 		}
 	});
 };
@@ -66,7 +66,7 @@ Room.methods.changeState = function(roomId, newState){
 			console.log(err);
 		}
 		else{
-			resp(Room);
+			callback(Room);
 		}
 	});
 };

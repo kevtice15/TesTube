@@ -15,7 +15,7 @@ var Playlist = new mongoose.Schema({
 });
 
 
-Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, resp){
+Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, callback){
 	var Playlist = mongoose.model('Playlist');
 	var Video = mongoose.model('Video');
 	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
@@ -24,13 +24,13 @@ Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, resp){
 			console.error(err);
 		}
 		else{
-			Playlist.videos.push(newVideo);
-			Playlist.save(function(err){
+			playlist.videos.push(newVideo);
+			playlist.save(function(err){
 				if(err){
 					console.error(err);
 				}
 			});
-			resp(Playlist);
+			callback(playlist);
 		}
 	});
 	/*
@@ -91,12 +91,12 @@ Playlist.methods.addCreatorandDJ = function(user){
 		dj: user.id
 	};
 	console.log(this._id);
-	Plist.findByIdAndUpdate(this._id, {$set: fields}, function(err, resp){
+	Plist.findByIdAndUpdate(this._id, {$set: fields}, function(err, callback){
 		if(err){
 			console.log(err);
 		}
 		else{
-			console.log("Updated playlist", resp);
+			console.log("Updated playlist", callback);
 		}
 	});
 	console.log("Added creator and dj: ", user);

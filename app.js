@@ -58,11 +58,6 @@ var User = require('./models/user.js');
 var Playlist = require('./models/playlist.js');
 var Room = require('./models/room.js');
 
-//Require controllers
-var playlists = require('./controllers/playlists');
-var rooms = require('./controllers/rooms');
-var users = require('./controllers/users');
-
 //Require our routes 
 require("./routes/routes.js")(app);
 
@@ -326,18 +321,28 @@ app.io.sockets.on("connection", function(socket) {
 			//if it doesn't exist
 			else{
 				//create it with a new playlist
+				var playlist = new Playlist({
+					creator: user,
+					shared: true,
+					name: roomname,
+					dj: user
+				});
+				playlist.save(function(err){
+					if(err){
+						console.error(err);
+					}
+				});
+				
 				var newRoom = new Room({
 					name: roomname,
 					DJ: user,
-					playlist: new Playlist({
-						creator: user,
-						shared: true,
-						name: roomname,
-						dj: user
-					})
+					playlist: playlist
 				});
+
 				newRoom.save(function(err){
-					console.error(err);
+					if(err){
+						console.error(err);
+					}
 				});
 				// add the user to it
 				User.joinRoom(user, newRoom._id, function(upUser){
@@ -386,16 +391,24 @@ app.io.sockets.on("connection", function(socket) {
 	socket.on('videoAdded', function(data){
 		console.log('videoAddedData', data);
 		var user = socket.handshake.session.passport.user;
+		var User = mongoose.model('UserSchema');
+		var Room = mongoose.model('Room');
 		var Playlist = mongoose.model('Playlist');
-		var User = mongoose.model("UserSchema");
-
-		User.getPlaylists(user, function(playlists){
-			for(var i = 0; i < playlists.length; i++){
-			///	if(playlists[i].name === )
+		var Video = mongoose.model('Video');
+		User.findById(user, function(err, foundUser){
+			if(err){
+				console.error(err);
+			}
+			else{
+				Room.getPlaylist(foundUser.room_id, function(playlist){
+					Playlist.findById(playlist, function(err, foundPlaylist){
+						foundPlaylist.addVideo(playlist, data.body.id, data.body.title, function(plist){
+							console.log("Added to room playlist", plist);
+						});
+					});
+				});
 			}
 		});
-
-		Playlist.find({})
 
 		socket.emit('status', {success: 'true'});
 		app.io.sockets.in(socket.room).emit('newVideo', { body: data.body });

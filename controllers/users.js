@@ -72,8 +72,7 @@ exports.del = function(request, response){
 exports.retrievePlaylists = function(request, response){
 	userLog("I get to the user controller");
 	var User = mongoose.model("UserSchema");
-	var getUser = new User();
-	getUser.getPlaylists(request.user, function(docs){
+	User.getPlaylists(request.user, function(docs){
 		console.log("RESPONSE", docs);
 		response.send({
 			playlist: docs,

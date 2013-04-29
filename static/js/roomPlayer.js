@@ -51,7 +51,7 @@ function addPlaylistToUser(name, shared){
 		success: function(data){
 			console.log(data);
 		}
-	})
+	});
 }
 
 $(document).ready(function(){
