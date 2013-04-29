@@ -24,6 +24,7 @@ function search() {
     console.log(response);
 
 
+
 /*
 		var searchIds = [];
 		//loop through results and create a json object from id for the dom
@@ -54,7 +55,7 @@ function search() {
     var statsObject = [];
     var count = response.items.length;
     $.each(response.items, function(i){
-		var contentRequest = gapi.client.youtube.videos.list({
+			var contentRequest = gapi.client.youtube.videos.list({
 			id: response.items[i].id.videoId,
 			part: 'statistics'
     	});

@@ -86,6 +86,31 @@ $(document).ready(function(){
 		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
 	});	
 */
+	//Code for the div to add a room
+	//==========================================================
+	$('#addRoomButton').click(function(){
+		var tempTop =  0.2*height;
+		$('#createRoom').css({top: tempTop});
+	});
+
+	$('#createRoomButton').click(function(){
+		if($('#roomName').val()!== ""){
+			var tempRoom = $('#roomName').val();
+			clientCreateRoom(tempRoom);
+			leftValue -= (width - 0);
+			$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
+			$('#createRoom').css({top: -300});
+			$('#'+ $('#roomName').val()).addClass('depressed');
+			$('#roomName').val("");
+		}else {
+			$('#errorRoom').html('Please enter a different room name');
+		}
+	});
+
+	//Add the code for the cancel out of the menu
+
+	//==========================================================
+
 
 	$('.roomLI').click(function() {
 		leftValue -= (width - 0);
