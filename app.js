@@ -145,15 +145,6 @@ app.get("/static/img/:filename", function(request, response){
 	response.sendfile("static/img/" + request.params.filename);
 });
 
-<<<<<<< HEAD
-// app.get('/', function(req, res){
-//   res.render('index', { user: req.user });
-// });
-
-// app.get('/account', ensureAuthenticated, function(req, res){
-//   res.render('account', { user: req.user });
-// });
-=======
 app.get("/", ensureAuthenticated, function(request, response){
 	response.sendfile("static/index.html");
 });
@@ -161,22 +152,12 @@ app.get("/", ensureAuthenticated, function(request, response){
 // app.get('/static/index.html', ensureAuthenticated, function(req, res){
 // 	res.sendfile('static/index.html');
 // })
->>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
 
 app.get('/login', function(req, res){
   res.sendfile('static/login.html');
 });
 
 
-
-<<<<<<< HEAD
-// app.get('/test', function(req, res){
-// 	console.log(req.user);
-// 	res.send({success: true});
-// });
-
-=======
->>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
 
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -406,46 +387,36 @@ app.io.sockets.on("connection", function(socket) {
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
 		//console.log('newRoom', newRoom);
 		//user.update({'data': {'room_id'}, })
-		console.log("you joined: " + roomname);
+		console.log("you joined: ", roomname);
 		// echo to client they've connected
-		socket.emit('updatechat', 'you have connected to' + roomname);
+		socket.emit('updatechat', 'you have connected to', roomname);
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
 
 
-		// console.log("Get room playlist: " + room.room_id);
-		// Room.getPlaylist(room.room_id, function(playlist){
-		// 	console.log("The Playlist: " + playlist);
-		// 	socket.emit('populateRoom', playlist);
-		// });
+		console.log("Get room playlist: ", room.room_id);
+		Room.getPlaylist(room.room_id, function(playlist){
+			console.log("The Playlist: " + playlist);
+			User.isDJ(user, room.room_id, function(amDJ){
+				socket.emit('populateRoom', playlist, amDJ);
+			});
+		});
 	});
 
 
-	socket.on('disconnect', function(){
-		var updateUser = mongoose.model('UserSchema');
+	socket.on('disconnect', function(data){
+		var User = mongoose.model('UserSchema');
 		var user = socket.handshake.session.passport.user;
-
+		console.log("User at disconnect", user);
 		//Attach user to room they just joined
-<<<<<<< HEAD
-		user.leaveRoom(user, undefined, function(user){
-			console.log("Removed user from room: ", user);
-		});
-		//TODO Delete room from db if no one is in the room;
-=======
-		updateUser.findByIdAndUpdate(user, {room_id: null}, function(err, updateUser){
-			if(err){
-				console.log(err);
-			}
-			else{
-				console.log(updateUser);
-				updateUser.save(function(err){
-					console.log(err);
-				});
-			}
+		
+		User.leaveRoom(user, function(foundUser){
+			console.log("Removed user from room: ", foundUser);
 		});
 		
-		//TODO Delete room from db
->>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
+		
+		//TODO Delete room from db if no one is in the room;
+
 		var oldroom = socket.room;
 		socket.leave(socket.room);
 		console.log('user left room');
@@ -467,7 +438,7 @@ app.io.sockets.on("connection", function(socket) {
 			else{
 				Room.getPlaylist(foundUser.room_id, function(playlist){
 					Playlist.findById(playlist, function(err, foundPlaylist){
-						foundPlaylist.addVideo(playlist, data.body.id, data.body.title, function(plist){
+						foundPlaylist.addVideo(playlist, data.body.id, data.body.title, data.body.thumbnail, function(plist){
 							console.log("Added to room playlist", plist);
 						});
 					});
@@ -491,10 +462,18 @@ app.io.sockets.on("connection", function(socket) {
 	});
 
 	socket.on('playPause', function(data){
+		console.log("Play pause data: ", data);
 		console.log("server received playpause: " +  data.state + " at " + data.time);
 		// socket.broadcast.to('room1').emit('update', data);
-		
+		var user = socket.handshake.session.passport.user;
 		var Room = mongoose.model('Room');
+		var User = mongoose.model('UserSchema');
+		var cState = {currentVideoTime: data.time, currentVideoState: data.state};
+		User.findById(user, function(err, foundUser){
+			Room.changeState(foundUser.room_id, cState, function(room){
+				console.log("Room State Update:", room);
+			});
+		});
 
 		app.io.sockets.in(socket.roomname).emit('update', {state: data.state, time: data.time});
 	});

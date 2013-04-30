@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Video = new mongoose.Schema({
 	youtube_id: String,
 	name: String,
+	thumbnail: String,
 	votes: Number
 });
 
@@ -15,10 +16,10 @@ var Playlist = new mongoose.Schema({
 });
 
 
-Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, callback){
+Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, yt_thumbnail, callback){
 	var Playlist = mongoose.model('Playlist');
 	var Video = mongoose.model('Video');
-	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
+	var newVideo = new Video({youtube_id: yt_id, name: yt_name, thumbnail: yt_thumbnail, votes: 0});
 	Playlist.findOne({_id: playlistId}, function(err, playlist){
 		if(err){
 			console.error(err);

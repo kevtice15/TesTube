@@ -72,20 +72,47 @@ function clientJoinRoom(r, room_id){
 		player.clearVideo();
 	});
 
-	socket.on('populateRoom', function(playlist){
+	socket.on('populateRoom', function(upPlaylist, isDJ){
 		// TODO: display playlist and attach the id of the playlist and
 		// the videos in the HTML
 		var playlistDiv = $('#playlist');
 		playlistDiv.attr('data-id', playlist._id);
-		for(var i = 0; i < playlist.videos; i ++){
-			playlistDiv.append("<div class=\"video-results-wrapper\" data-id=\"" + playlist.videos[i]._id + "\" data-title=\"" + playlist.videos[i].name + "\"></div>");
+		
+		for(var i = 0; i < upPlaylist.videos.length; i++){
+			playlistDiv.append("<div class=\"video-results-wrapper\" data-id=\"" + upPlaylist.videos[i]._id + "\" data-title=\"" + upPlaylist.videos[i].name + "\"><div class=\"thumbnail\"><img src=\"" + upPlaylist.videos[i].thumbnail + "\"></div><div class=\"search-title\"" + upPlaylist.videos[i].name + "</div></div>");
+
+
+			// var thumbDiv = $('div').addClass("thumbnail");
+			// console.log("thumbDiv: ", thumbDiv);
+			// var thumbImg = $('img').attr("src", playlist.videos[i].thumbnail);
+			// console.log("thumbImg: ", thumbImg);
+			// var vidTitleDiv = $('div').addClass("search-title").html(playlist.videos[i].name);
+			// console.log("vidTitleDiv: ", vidTitleDiv);
+			// var vidResultsDiv = $("div").addClass("video-results-wrapper").attr("data-dbid", playlist.videos[i]._id);
+			// console.log("vidResultDiv: ", vidResultsDiv);
+			//thumbDiv.append(thumbImg);
+			//vidResultsDiv.append(thumbDiv);
+			//vidResultsDiv.append(vidTitleDiv);
+			//playlistDiv.append(vidResultsDiv);
 		}
-		console.log("Populating playlist: ", playlist);
+
+
+
+		console.log("Populating playlist: ", upPlaylist);
+		playlist = upPlaylist.videos;
+		if(isDJ){
+			console.log("The DJ ENTERS", isDJ);
+			player.loadVideoById(playlist[0], 0, 'medium');
+			console.log("Player loaded video");
+		}
+		console.log("Now playlist = ", playlist);
+
 	});
 
 }
 
 function clientLeaveRoom(){
+	$("#playlist").empty();
 	socket.disconnect();
 	socket = null;
 	console.log("client disconnected");
@@ -171,7 +198,7 @@ function clientCreateRoom(r){
 // function addVideo(id){
 function addVideo(videoData){
 	// socket.emit('videoAdded', {body: id });
-	console.log("client add video to playlist:" + videoData);
+	console.log("client add video to playlist:", videoData);
 	socket.emit('videoAdded', {body: videoData});
 }
 
@@ -188,10 +215,11 @@ function stopVideo(){
 	socket.emit('stop');
 }
 
-function disconnectFromRoom(){
-	$("#playlist").empty();
-	socket.emit('disconnect');
-}
+
+// function disconnectFromRoom(){
+// 	$("#playlist").empty();
+// 	socket.emit('disconnect');
+// }
 
 
 

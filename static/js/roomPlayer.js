@@ -123,7 +123,6 @@ $(document).ready(function(){
 	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
 		/*leftValue -= Math.floor(width) */
-		
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
 		$(this).addClass('depressed');
 	});
@@ -131,8 +130,9 @@ $(document).ready(function(){
 	$('#backButton').click(function() {
 		leftValue += (width - 0);
 		console.log(leftValue);
-		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
-		disconnectFromRoom();
+		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
+		clientLeaveRoom();
+		playlist = [];
 	});
   	 	
  	 	
@@ -329,6 +329,8 @@ $(document).ready(function(){
 	The API calls this function when the player's state changes.
 
 */
+
+		
 	var done = false;
 	
 	function onPlayerStateChange(e) {
@@ -378,11 +380,6 @@ $(document).ready(function(){
 			return 'video cued';
 		}		
 	}
-
-
-
-
-	
 });
 	
 function sessionTest(){
@@ -394,14 +391,5 @@ function sessionTest(){
 			}
 		});
 	}
-
-
-
-
-
-
-
-
-
 
 

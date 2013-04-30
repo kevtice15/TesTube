@@ -58,9 +58,8 @@ Room.methods.getState = function(roomId, callback){
 	});
 };
 
-Room.methods.changeState = function(roomId, newState){
-	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
+Room.statics.changeState = function(roomId, newState, callback){
+	this.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
 		if(err){
 			console.log(err);
 		}

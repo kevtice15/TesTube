@@ -85,7 +85,17 @@ UserSchema.statics.getPlaylists = function(user, callback){
 };
 
 
-UserSchema.methods.isDJ = function(userId, callback){
+UserSchema.statics.isDJ = function(userId, roomId, callback){
+	var Room = mongoose.model("Room");
+	Room.findById(roomId, function(err, room){
+		if(err){
+			console.error(err);
+		}
+		else{
+			console.log("DJ Comparison:\n", room.DJ, userId);
+			callback(room.DJ.equals(userId));
+		}
+	});
 	/*
 	var findUser = mongoose.model("UserSchema");
 	findUser.findOne({_id: userId}, function(err, user){
@@ -100,7 +110,7 @@ UserSchema.methods.isDJ = function(userId, callback){
 };
 
 UserSchema.statics.joinRoom = function(userId, roomId, callback){
-	this.findByIdAndUpdate(userId, {room_id: roomId}, function(err, user){
+	this.findByIdAndUpdate(userId, {$set: {room_id: roomId}}, function(err, user){
 		if(err){
 			console.log(err);
 		}
@@ -118,15 +128,16 @@ UserSchema.statics.joinRoom = function(userId, roomId, callback){
 };
 
 UserSchema.statics.leaveRoom = function(userId, callback){
-	this.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
+	console.log("Searching for user: ", userId);
+	this.findByIdAndUpdate(userId, {$set: {room_id: null}}, function(err, user){
 		if(err){
-			console.log(err);
+			console.log("Cannot find user to remove from room ", err);
 		}
 		else{
-			User.save(function(err){
+			user.save(function(err){
 				console.log(err);
 			});
-			callback(User);
+			callback(user);
 		}
 	});
 };
