@@ -250,7 +250,7 @@ var usernames = {};
 var roomArray = ['room1','room2','room3'];
 var roomState = {
 	'playlist': []
-}
+};
 
 
 app.io.sockets.on("connection", function(socket) {
@@ -293,7 +293,6 @@ app.io.sockets.on("connection", function(socket) {
 		var Playlist = mongoose.model('Playlist');
 		var User = mongoose.model('UserSchema');
 
-		//STORING THE ROOM NAME INCORRECTLY IN THE PLAYLIST?????
 		Room.findById(room_Id, function(err, room){
 			//if the room exists
 			if(room !== null){
@@ -361,6 +360,7 @@ app.io.sockets.on("connection", function(socket) {
 		socket.emit('updatechat', 'you have connected to' + roomname);
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
+
 
 		console.log("Get room playlist: " + room.room_id);
 		Room.getPlaylist(room.room_id, function(playlist){
