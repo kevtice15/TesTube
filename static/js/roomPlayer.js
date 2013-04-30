@@ -123,7 +123,7 @@ $(document).ready(function(){
 	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
 		/*leftValue -= Math.floor(width) */
-		console.log(leftValue);
+		
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
 		$(this).addClass('depressed');
 	});
@@ -195,6 +195,16 @@ $(document).ready(function(){
 			down =false;
 		}
 	})
+	
+	$('#dj-request').click(function(){
+		$('#controls-parent').css({top: '0%'});			
+	});
+	
+	$('#ytButtons').click(function(){
+		$('#controls-parent').css({top: '-100%'});		
+	});
+	
+	
 	
 	$('#searchResults').on('click', '.video-result-wrapper', function(){
 		 // console.log(this);

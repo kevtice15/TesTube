@@ -126,7 +126,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get("/static/:filename", function(request, response){
+app.get("/static/:filename", ensureAuthenticated, function(request, response){
 	response.sendfile("static/" + request.params.filename);
 });
 
@@ -145,6 +145,7 @@ app.get("/static/img/:filename", function(request, response){
 	response.sendfile("static/img/" + request.params.filename);
 });
 
+<<<<<<< HEAD
 // app.get('/', function(req, res){
 //   res.render('index', { user: req.user });
 // });
@@ -152,6 +153,15 @@ app.get("/static/img/:filename", function(request, response){
 // app.get('/account', ensureAuthenticated, function(req, res){
 //   res.render('account', { user: req.user });
 // });
+=======
+app.get("/", ensureAuthenticated, function(request, response){
+	response.sendfile("static/index.html");
+});
+
+// app.get('/static/index.html', ensureAuthenticated, function(req, res){
+// 	res.sendfile('static/index.html');
+// })
+>>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
 
 app.get('/login', function(req, res){
   res.sendfile('static/login.html');
@@ -159,11 +169,14 @@ app.get('/login', function(req, res){
 
 
 
+<<<<<<< HEAD
 // app.get('/test', function(req, res){
 // 	console.log(req.user);
 // 	res.send({success: true});
 // });
 
+=======
+>>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
 
 // GET /auth/google
 //   Use passport.authenticate() as route middleware to authenticate the
@@ -184,7 +197,7 @@ app.get('/auth/google',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/static/index.html' }),
+  passport.authenticate('google', { failureRedirect: '/static/login.html' }),
   function(req, res) {
 	console.log("auth google callback");
     res.redirect('/static/index.html');
@@ -203,8 +216,9 @@ app.get('/logout', function(req, res){
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
+	console.log("ensureAuthenticated");
+  if (req.isAuthenticated()) { console.log("is logged in:" + req); return next(); }
+  res.redirect('login');
 }
 
 
@@ -399,11 +413,11 @@ app.io.sockets.on("connection", function(socket) {
 		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
 
 
-		console.log("Get room playlist: " + room.room_id);
-		Room.getPlaylist(room.room_id, function(playlist){
-			console.log("The Playlist: " + playlist);
-			socket.emit('populateRoom', playlist);
-		});
+		// console.log("Get room playlist: " + room.room_id);
+		// Room.getPlaylist(room.room_id, function(playlist){
+		// 	console.log("The Playlist: " + playlist);
+		// 	socket.emit('populateRoom', playlist);
+		// });
 	});
 
 
@@ -412,15 +426,31 @@ app.io.sockets.on("connection", function(socket) {
 		var user = socket.handshake.session.passport.user;
 
 		//Attach user to room they just joined
+<<<<<<< HEAD
 		user.leaveRoom(user, undefined, function(user){
 			console.log("Removed user from room: ", user);
 		});
 		//TODO Delete room from db if no one is in the room;
+=======
+		updateUser.findByIdAndUpdate(user, {room_id: null}, function(err, updateUser){
+			if(err){
+				console.log(err);
+			}
+			else{
+				console.log(updateUser);
+				updateUser.save(function(err){
+					console.log(err);
+				});
+			}
+		});
+		
+		//TODO Delete room from db
+>>>>>>> 445be06a7cee6911bcb3276ff4fb54198b7c7453
 		var oldroom = socket.room;
 		socket.leave(socket.room);
 		console.log('user left room');
 		app.io.sockets.in(oldroom).emit('updatechat', ' has left this room');
-		app.io.sockets.emit('updaterooms', rooms);
+		// app.io.sockets.emit('updaterooms', rooms);
 	});
 
 	socket.on('videoAdded', function(data){
