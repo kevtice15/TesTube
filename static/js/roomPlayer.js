@@ -127,6 +127,7 @@ $(document).ready(function(){
 			$('#canvasDiv').css({left: 0}); 	
 			$('#canvasDiv').removeClass('openMenu'); 	
 			console.log("menu closed");
+			leftValue = 0;
 		} else {
 			leftValue = width - $('#homeMenu').height();
 			$('#canvasDiv').css({left: leftValue}); 	
