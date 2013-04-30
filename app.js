@@ -82,6 +82,8 @@ passport.deserializeUser(function(id, done){
 	//		console.log(err);
 	//	}
 	//	else{
+		// console.log("DESERIALIZER !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 			done(null, id);
 	//	}
 	//});
@@ -95,6 +97,7 @@ passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: "http://127.0.0.1:8889/auth/google/callback"
+    // callbackURL: "http://letuce.nodejitsu.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -126,7 +129,7 @@ passport.use(new GoogleStrategy({
   }
 ));
 
-app.get("/static/:filename", function(request, response){
+app.get("/static/:filename", ensureAuthenticated, function(request, response){
 	response.sendfile("static/" + request.params.filename);
 });
 
@@ -145,24 +148,18 @@ app.get("/static/img/:filename", function(request, response){
 	response.sendfile("static/img/" + request.params.filename);
 });
 
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
+app.get("/", ensureAuthenticated, function(request, response){
+	response.sendfile("static/index.html");
 });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
+// app.get('/static/index.html', ensureAuthenticated, function(req, res){
+// 	res.sendfile('static/index.html');
+// })
 
 app.get('/login', function(req, res){
   res.sendfile('static/login.html');
 });
 
-
-
-app.get('/test', function(req, res){
-	console.log(req.user);
-	res.send({success: true});
-});
 
 
 // GET /auth/google
@@ -184,7 +181,7 @@ app.get('/auth/google',
 //   login page.  Otherwise, the primary route function function will be called,
 //   which, in this example, will redirect the user to the home page.
 app.get('/auth/google/callback',
-  passport.authenticate('google', { failureRedirect: '/static/index.html' }),
+  passport.authenticate('google', { failureRedirect: '/static/login.html' }),
   function(req, res) {
 	console.log("auth google callback");
     res.redirect('/static/index.html');
@@ -193,7 +190,7 @@ app.get('/auth/google/callback',
 
 app.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/static/index.html');
+  res.redirect('/static/login.html');
 });
 
 
@@ -203,8 +200,9 @@ app.get('/logout', function(req, res){
 //   the request will proceed.  Otherwise, the user will be redirected to the
 //   login page.
 function ensureAuthenticated(req, res, next) {
-  if (req.isAuthenticated()) { return next(); }
-  res.redirect('/login');
+	console.log("ensureAuthenticated");
+  if (req.isAuthenticated()) { console.log("is logged in:" + req); return next(); }
+  res.redirect('login');
 }
 
 
@@ -250,7 +248,7 @@ var usernames = {};
 var roomArray = ['room1','room2','room3'];
 var roomState = {
 	'playlist': []
-}
+};
 
 
 app.io.sockets.on("connection", function(socket) {
@@ -262,27 +260,54 @@ app.io.sockets.on("connection", function(socket) {
 		console.log("Add room start");
 		var user = socket.handshake.session.passport.user;
 		//create new room in db
-		var newRoom = new Room({'name': roomname, 'DJ': user});
+		
+		var newPlaylist = new Playlist({
+			creator: user,
+			shared: true,
+			name: roomname,
+			dj: user
+		});
+		newPlaylist.save(function(err, newPlaylist){
+			if(err){
+				console.error(err);
+			}
+			else{
+				console.log("New playlist on add", newPlaylist);
+			}
+		});
+
+		var newRoom = new Room({
+			'name': roomname,
+			'DJ': user,
+			'playlist': newPlaylist._id
+		});
 		newRoom.save(function(err, newRoom){
 			if(err){
 				console.error(err);
 			}
 			else{
-				console.log(newRoom);
+				console.log("New room on add", newRoom);
 			}
 		});
-		socket.handshake.session.passport.room = newRoom._id;
+		
+		// console.log("new room id", newRoom._id);
+		// newRoom.addPlaylist(newRoom._id, newPlaylist._id, function(room){
+		// 	console.log("Added playlist to room:", room);
+		// })
+		
+		//socket.handshake.session.passport.room = newRoom._id;
 		console.log(socket.handshake.session.passport);
-		socket.emit('write-room-id', {room_id: newRoom._id});
+		
 		//socket.emit('rooms:create', {body:{name: roomname}});
 		//rooms.create({name: roomname});
 		//socket.emit('roomDoneCreated');
 		console.log("Add room end");
+		socket.emit('write-room-id', {room_id: newRoom._id});
 	});
 
 	socket.on('joinRoom', function(room){
 		// store the room name in the socket session for this client
-		console.log("HOW BOUT THIS JOIN ROOM ENTRY");
+		console.log("HOW BOUT THIS SWEET JOIN ROOM ENTRY");
 		socket.room = room.room_name;
 		var roomname = room.room_name;
 		var room_Id = room.room_id;
@@ -294,12 +319,15 @@ app.io.sockets.on("connection", function(socket) {
 		var User = mongoose.model('UserSchema');
 
 		Room.findById(room_Id, function(err, room){
+			console.log("I get here 1");
 			//if the room exists
 			if(room !== null){
+				console.log("Room exists!");
 				//Add user
 				User.joinRoom(user, room._id, function(upUser){
 					console.log(upUser);
 				});
+				/*
 				//Create playlist
 				var playlist = new Playlist({
 					creator: user,
@@ -316,9 +344,11 @@ app.io.sockets.on("connection", function(socket) {
 				room.addPlaylist(room._id, playlist._id, function(room){
 					console.log("added playlist to room", room);
 				});
+				*/
 			}
 			//if it doesn't exist
 			else{
+				console.log("Room doesn't exist!");
 				//create it with a new playlist
 				var playlist = new Playlist({
 					creator: user,
@@ -335,7 +365,7 @@ app.io.sockets.on("connection", function(socket) {
 				var newRoom = new Room({
 					name: roomname,
 					DJ: user,
-					playlist: playlist
+					playlist: playlist._id
 				});
 
 				newRoom.save(function(err){
@@ -343,62 +373,64 @@ app.io.sockets.on("connection", function(socket) {
 						console.error(err);
 					}
 				});
+
+				console.log("newRoom id: ", newRoom._id);
+				console.log("playlist id: ", playlist._id);
+
+				newRoom.addPlaylist(newRoom._id, playlist._id,function(room){
+					console.log("Room with playlist: ", room);
+				});
 				// add the user to it
 				User.joinRoom(user, newRoom._id, function(upUser){
 					console.log(upUser);
 				});
 			}
-
+		});
+		console.log("I get here 2");
 		// join room
 		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
 		//console.log('newRoom', newRoom);
 		//user.update({'data': {'room_id'}, })
-		console.log("you joined: " + roomname);
+		console.log("you joined: ", roomname);
 		// echo to client they've connected
-		socket.emit('updatechat', 'you have connected to' + roomname);
+		socket.emit('updatechat', 'you have connected to', roomname);
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
 
-
-
-	});
-		
-		// join room
-		socket.join(room.room_name);
-		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
-		//console.log('newRoom', newRoom);
-		//user.update({'data': {'room_id'}, })
-		console.log("you joined: " + room.room_name);
-		// echo to client they've connected
-		socket.emit('updatechat', 'you have connected to' + room.room_name);
-		// echo to room 1 that a person has connected to their room
-		socket.broadcast.to(room.room_name).emit('updatechat',  ' has connected to this room');
-
-		
-		
-	});
-
-
-	socket.on('disconnect', function(){
-		var updateUser = mongoose.model('UserSchema');
-		var user = socket.handshake.session.passport.user;
-
-		//Attach user to room they just joined
-		updateUser.findByIdAndUpdate(user, {room_id: null}, function(err, updateUser){
-			if(err){
-				console.log(err);
-			}
-			else{
-				console.log(updateUser);
-			}
+		console.log("I get here 3");
+		console.log("Get room playlist: ", room.room_id);
+		Room.getPlaylist(room.room_id, function(playlist){
+			console.log("The Playlist: " + playlist);
+			User.isDJ(user, room.room_id, function(amDJ){
+				socket.emit('populateRoom', playlist, amDJ);
+				if(!amDJ){
+					socket.emit('notDJ');
+				}
+				console.log("pop u late room emitted");
+			});
 		});
-		//TODO Delete room from db
+	});
+
+
+	socket.on('disconnect', function(data){
+		var User = mongoose.model('UserSchema');
+		var user = socket.handshake.session.passport.user;
+		console.log("User at disconnect", user);
+		//Attach user to room they just joined
+		
+		User.leaveRoom(user, function(foundUser){
+			console.log("Removed user from room: ", foundUser);
+		});
+		
+		
+		//TODO Delete room from db if no one is in the room;
+
 		var oldroom = socket.room;
 		socket.leave(socket.room);
 		console.log('user left room');
 		app.io.sockets.in(oldroom).emit('updatechat', ' has left this room');
-		app.io.sockets.emit('updaterooms', rooms);
+		// app.io.sockets.emit('updaterooms', rooms);
 	});
 
 	socket.on('videoAdded', function(data){
@@ -415,7 +447,7 @@ app.io.sockets.on("connection", function(socket) {
 			else{
 				Room.getPlaylist(foundUser.room_id, function(playlist){
 					Playlist.findById(playlist, function(err, foundPlaylist){
-						foundPlaylist.addVideo(playlist, data.body.id, data.body.title, function(plist){
+						foundPlaylist.addVideo(playlist, data.body.id, data.body.title, data.body.thumbnail, function(plist){
 							console.log("Added to room playlist", plist);
 						});
 					});
@@ -439,10 +471,18 @@ app.io.sockets.on("connection", function(socket) {
 	});
 
 	socket.on('playPause', function(data){
+		console.log("Play pause data: ", data);
 		console.log("server received playpause: " +  data.state + " at " + data.time);
 		// socket.broadcast.to('room1').emit('update', data);
-		
+		var user = socket.handshake.session.passport.user;
 		var Room = mongoose.model('Room');
+		var User = mongoose.model('UserSchema');
+		var cState = {currentVideoTime: data.time, currentVideoState: data.state};
+		User.findById(user, function(err, foundUser){
+			Room.changeState(foundUser.room_id, cState, function(room){
+				console.log("Room State Update:", room);
+			});
+		});
 
 		app.io.sockets.in(socket.roomname).emit('update', {state: data.state, time: data.time});
 	});
@@ -456,6 +496,34 @@ app.io.sockets.on("connection", function(socket) {
 	socket.on('stop', function(){
 		console.log("server received stop");
 		app.io.sockets.in(socket.roomname).emit('stopVideo')
+	});
+
+	socket.on('dj-request', function(){
+		var user = socket.handshake.session.passport.user;
+		var User = mongoose.model('UserSchema');
+		var Rooom = mongoose.model('Room');
+
+		User.findById(user, function(err, foundUser){
+			if(err){
+				console.error(err);
+			}
+			else{
+				User.isDJ(user, foundUser.room_id, function(isDJ){
+					if(!isDJ){
+						console.log("The user is not the dj");
+						Room.changeDJ(foundUser.room_id, foundUser._id, function(room){
+							console.log("New room dj: ", room);
+							socket.emit("giveDJControls");
+						});
+					}
+					else{
+						console.log("The user is the dj");
+						socket.emit("giveDJControls");
+
+					}
+				});
+			}
+		});
 	});
 
 });

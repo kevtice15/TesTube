@@ -53,7 +53,7 @@ UserSchema.methods.addPlaylist = function(user, data, callback){
 */
 };
 
-UserSchema.deletePlaylist = function(user, playlist, callback){
+UserSchema.statics.deletePlaylist = function(user, playlist, callback){
 	var Playlist = mongoose.model('Playlist');
 	
 	Playlist.findByIdAndRemove(playlist, function(err, Playlist){
@@ -85,7 +85,17 @@ UserSchema.statics.getPlaylists = function(user, callback){
 };
 
 
-UserSchema.methods.isDJ = function(userId, callback){
+UserSchema.statics.isDJ = function(userId, roomId, callback){
+	var Room = mongoose.model("Room");
+	Room.findById(roomId, function(err, room){
+		if(err){
+			console.error(err);
+		}
+		else{
+			console.log("DJ Comparison:\n", room.DJ, userId);
+			callback(room.DJ.equals(userId));
+		}
+	});
 	/*
 	var findUser = mongoose.model("UserSchema");
 	findUser.findOne({_id: userId}, function(err, user){
@@ -100,7 +110,7 @@ UserSchema.methods.isDJ = function(userId, callback){
 };
 
 UserSchema.statics.joinRoom = function(userId, roomId, callback){
-	this.findByIdAndUpdate(userId, {room_id: roomId}, function(err, user){
+	this.findByIdAndUpdate(userId, {$set: {room_id: roomId}}, function(err, user){
 		if(err){
 			console.log(err);
 		}
@@ -117,19 +127,38 @@ UserSchema.statics.joinRoom = function(userId, roomId, callback){
 
 };
 
-UserSchema.statics.leaveRoom = function(userId, roomId){
-	this.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
+UserSchema.statics.leaveRoom = function(userId, callback){
+	console.log("Searching for user: ", userId);
+	this.findByIdAndUpdate(userId, {$set: {room_id: null}}, function(err, user){
 		if(err){
-			console.log(err);
+			console.log("Cannot find user to remove from room ", err);
 		}
 		else{
-			callback(User);
+			user.save(function(err){
+				console.log(err);
+			});
+			callback(user);
 		}
 	});
 };
 
-UserSchema.methods.becomeDJ = function(){
-
+UserSchema.statics.becomeDJ = function(userId, roomId, callback){
+	var Room = mongoose.model("Room");
+	this.findById(userId, function(err, user){
+		if(err){
+			console.error(err);
+		}
+		else{
+			Room.findByIdAndUpdate(user.room, {$set: {DJ: userId}}, function(err, room){
+				if(err){
+					console.error(err);
+				}
+				else{
+					callback(room);
+				}
+			});
+		}
+	});
 };
 
 UserSchema.methods.relinquishDJ = function(){

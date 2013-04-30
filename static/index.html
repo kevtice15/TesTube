@@ -15,47 +15,65 @@
 </head>
  	<body>
  	<div id="phoneContainer">
+ 		
+ 		<!-- The menu for the application -->
+		<div id="appMenu">
+			<div id="menuTitle"><h2>Letucé</h2></div>
+			<nav>
+				<ul id="menu-list">
+					<li id="logout">
+						<a href="#" >Log out</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		
  		<div id="canvasDiv">
 			<!-- <div id="center-box"></div> -->
 
 			<!--Login screen-->
-<!--
-			<div id='login-screen'>
+
+			<!-- <div id='login-screen'>
 
 				<h2>TesTube</h2>
 				<div id="buttons">
 				<a class="button" id="login-button">Welcome</a>
-=======
+
 				<h2>Letucé</h2>
 				<input id="login" value='' type="text" placeholder="Login here"/>
 				<div class="iconButton">
 				<a id="login-button"><img id="loginImg" src="google.png"></a>	
 				</div>
-			</div>
--->
+			</div> -->
+
 			
 			<!--home screen -->
 			<div id="home-screen">
 				<div id="homeMenu">
-					<img class="leftIcon" src="img/menu.png"/>
+					<img id="menuIcon" class="leftIcon" src="img/menu.png"/>
 					<img class="centerIcon" src="img/room.png"/>
 					<img id="addRoomButton" class="rightIcon" src="img/plus.png"/>	
 				</div>
-				<ul id="rooms">
-					<li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
-						<a href="#" >Room1</a>
-					</li>
-					<li class="roomLI" id="room2" onclick=clientJoinRoom('room2')>
-						<a href="#" >Room2</a>
-					</li>
-				</ul>
+				
+			
+				<nav>
+					<ul id="rooms">
+						<!-- <li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
+							<a href="#" >Room1</a>
+						</li>
+						<li class="roomLI" id="room2" onclick=clientJoinRoom('room2')>
+							<a href="#" >Room2</a>
+						</li> -->
+					</ul>
+				</nav>
 				<!-- <div id="rooms"></div> -->
 
-				<!-- Need to add a cancel button, maybe an x in the corner -->
+				<!-- Div modal for creating a room -->
 				<div id="createRoom">
 					<input id="roomName" val=""></input>
 					<div id="createRoomButton">Create Room</div>
 					<div id="errorRoom"></div>
+					<a id="closeMenu"><img src="img/closeIcon.png"/></a>
 				</div>
 			</div>
 			
@@ -78,15 +96,19 @@
 						<iframe id="ytplayer"> </iframe>	
 						</div>
 						
-						<div id="ytButtons">
-							<a id="previous"><img src="img/previous.png"/></a>	
-							<a id="stop"><img src="img/stop.png"/></a>
-							<a id="pause"><img src="img/pause.png"/></a>
-							<a id="play"><img src="img/play.png"/></a>							
-							<a id="next"><img src="img/next.png"/></a>
-							<a id="mute"><img src="img/mute.png"/></a>			
+						<div id="controls-frame">
+							<div id="controls-parent">
+								<div id="ytButtons">
+									<a id="previous"><img src="img/previous.png"/></a>	
+									<a id="stop"><img src="img/stop.png"/></a>
+									<a id="pause"><img src="img/pause.png"/></a>
+									<a id="play"><img src="img/play.png"/></a>							
+									<a id="next"><img src="img/next.png"/></a>
+									<a id="mute"><img src="img/mute.png"/></a>			
+								</div>
+								<div id="dj-request">Request DJ playa</div>		
+							</div>
 						</div>
-						
 <!--
 						<div id="roomSubMenu">							
 						</div>
@@ -105,8 +127,9 @@
 						</div>
 	-->
 					
-						<div id="buttons"></div>
-						<div id='playlist'></div>
+<!-- 						<div id="buttons"></div> -->
+						<div id='playlist'>playlist</div>
+						
 							
 							<script id="playlistTemplate" type="text/x-handlebars-template">
 								
@@ -116,6 +139,10 @@
 									</div>
 									<div class="search-title"> {{title}} </div>
 			<!-- 						<p class="search-id"> {{id}}</p> -->
+									<div id="votes">
+										<div id="upvote" class="vote-arrow"> <img id="black" src="img/up.png"/><!-- <img id="blue" src="img/upselect.png"/> --></div>
+										<div id="downvote" class="vote-arrow"><img id="black" src="img/down.png"/><!-- <img id="blue" src="img/downselect.png"/> --></div>
+									</div>
 								</div>	
 							
 											
@@ -159,10 +186,13 @@
 							<img src="{{snippet.thumbnails.default.url}}">
 						</div>
 						<div class="search-title"> {{snippet.title}} 
-						<p>comment count: {{stats.commentCount}}
-						dislike count: {{stats.dislikeCount}}
-						like count: {{stats.likeCount}}
-						view count: {{stats.viewCount}}</p></div>
+							<p>
+								comment count: {{stats.commentCount}}
+								dislike count: {{stats.dislikeCount}}
+								like count: {{stats.likeCount}}
+								view count: {{stats.viewCount}}
+							</p>
+						</div>
 						<div class="add">
 							<img src="img/add.png">
 						</div>

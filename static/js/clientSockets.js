@@ -63,7 +63,7 @@ function clientJoinRoom(r, room_id){
 			// player.seekTo(data.time, false);
 		}else if(data.state === 'paused'){
 			player.seekTo(data.time, false);
-			player.pauseVideo();	
+			player.pauseVideo();
 		}
 	});
 
@@ -72,9 +72,54 @@ function clientJoinRoom(r, room_id){
 		player.clearVideo();
 	});
 
+	socket.on('populateRoom', function(upPlaylist, isDJ){
+		// TODO: display playlist and attach the id of the playlist and
+		// the videos in the HTML
+		var playlistDiv = $('#playlist');
+		playlistDiv.attr('data-id', playlist._id);
+		
+		for(var i = 0; i < upPlaylist.videos.length; i++){
+			playlistDiv.append("<div class=\"video-results-wrapper\" data-id=\"" + upPlaylist.videos[i]._id + "\" data-title=\"" + upPlaylist.videos[i].name + "\"><div class=\"thumbnail\"><img src=\"" + upPlaylist.videos[i].thumbnail + "\"></div><div class=\"search-title\"" + upPlaylist.videos[i].name + "</div></div>");
+
+
+			// var thumbDiv = $('div').addClass("thumbnail");
+			// console.log("thumbDiv: ", thumbDiv);
+			// var thumbImg = $('img').attr("src", playlist.videos[i].thumbnail);
+			// console.log("thumbImg: ", thumbImg);
+			// var vidTitleDiv = $('div').addClass("search-title").html(playlist.videos[i].name);
+			// console.log("vidTitleDiv: ", vidTitleDiv);
+			// var vidResultsDiv = $("div").addClass("video-results-wrapper").attr("data-dbid", playlist.videos[i]._id);
+			// console.log("vidResultDiv: ", vidResultsDiv);
+			//thumbDiv.append(thumbImg);
+			//vidResultsDiv.append(thumbDiv);
+			//vidResultsDiv.append(vidTitleDiv);
+			//playlistDiv.append(vidResultsDiv);
+		}
+
+		
+		console.log("Populating playlist: ", upPlaylist);
+		playlist = upPlaylist.videos;
+		if(playlist !== undefined && playlist !== []){
+			console.log("The DJ ENTERS", isDJ);
+			player.cueVideoById(playlist[0].youtube_id, 0, 'medium');
+			console.log("Player loaded video");
+		}
+		console.log("Now playlist = ", playlist);
+
+	});
+
+	// socket.on('giveDJControls', function(){
+	// 	$('#controls-parent').css({top: '0%'});
+	// });
+
+	socket.on('notDJ', function(){
+		$('#controls-parent').css({top: '-100%'});
+	});
+
 }
 
 function clientLeaveRoom(){
+	$("#playlist").empty();
 	socket.disconnect();
 	socket = null;
 	console.log("client disconnected");
@@ -103,6 +148,8 @@ function clientCreateRoom(r){
 
 	socket.on("write-room-id", function(data){
 		$('#rooms').prepend('<li class="roomLI" onclick="clientJoinRoom(\''+ r + '\', ' + '\'' + data.room_id + '\')" data-id="' + data.room_id + '"><a href="#" >' + r + '</a></li>');
+		var newData = {room_name: r, room_id:data.room_id};
+		socket.emit('joinRoom', newData);
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
@@ -155,16 +202,12 @@ function clientCreateRoom(r){
 		player.stopVideo();
 		player.clearVideo();
 	});
-
-	socket.on('roomDoneCreated', function(){
-		socket.disconnect();
-	});
 }
 
 // function addVideo(id){
 function addVideo(videoData){
 	// socket.emit('videoAdded', {body: id });
-	console.log("client add video to playlist:" + videoData);
+	console.log("client add video to playlist:", videoData);
 	socket.emit('videoAdded', {body: videoData});
 }
 
@@ -180,6 +223,16 @@ function playPauseToggle(state, time){
 function stopVideo(){
 	socket.emit('stop');
 }
+
+// function requestToBeDJ(){
+// 	socket.emit('dj-request');
+// 	console.log("Emitted dj request");
+// }
+
+// function disconnectFromRoom(){
+// 	$("#playlist").empty();
+// 	socket.emit('disconnect');
+// }
 
 
 

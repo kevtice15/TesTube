@@ -3,6 +3,7 @@ var mongoose = require('mongoose');
 var Video = new mongoose.Schema({
 	youtube_id: String,
 	name: String,
+	thumbnail: String,
 	votes: Number
 });
 
@@ -15,10 +16,10 @@ var Playlist = new mongoose.Schema({
 });
 
 
-Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, callback){
+Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, yt_thumbnail, callback){
 	var Playlist = mongoose.model('Playlist');
 	var Video = mongoose.model('Video');
-	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
+	var newVideo = new Video({youtube_id: yt_id, name: yt_name, thumbnail: yt_thumbnail, votes: 0});
 	Playlist.findOne({_id: playlistId}, function(err, playlist){
 		if(err){
 			console.error(err);
@@ -59,16 +60,72 @@ Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, callback){
 	 */
 };
 
-Playlist.methods.deleteVideo = function(playlistId, yt_id){
-	var Playlist = mongoose.model('Playlist');
+Playlist.statics.deleteVideo = function(playlistId, videoId, callback){
 	var Video = mongoose.model('Video');
-	var newVideo = new Video({youtube_id: yt_id, name: yt_name, votes: 0});
-	Playlist.findOne({_id: playlistId}, function(err, playlist){
+	this.findById(playlistId, function(err, playlist){
 		if(err){
 			console.error(err);
 		}
 		else{
-			//TODO: find the video and pull it
+			playlist.videos.pull(videoId);
+			// Video.findById(videoId, function(err, video){
+			// 	playlist.videos.pull(video);
+			playlist.save(function(err){
+				if(err){
+			 		console.error(err);
+			 	}
+			});
+			// });
+		}
+	});
+
+};
+
+Playlist.statics.addVote = function(playlistId, videoId, callback){
+	this.findById(playlistId, function(err, playlist){
+		if(err){
+			console.error(err);
+		}
+		else{
+			for(var i = 0; i < playlist.videos.length; i++){
+				if(playlist.videos[i]._id.equals(videoId)){
+					playlist.videos[i].update({votes: votes + 1}, {multi: false}, function(err){
+						if(err){
+							console.error(err);
+						}
+					});
+					playlist.videos[i].save(function(err){
+						if(err){
+							console.error(err);
+						}
+					});
+				}
+			}
+		}
+	});
+
+};
+
+Playlist.statics.subtractVote = function(playlistId, videoId,callback){
+this.findById(playlistId, function(err, playlist){
+		if(err){
+			console.error(err);
+		}
+		else{
+			for(var i = 0; i < playlist.videos.length; i++){
+				if(playlist.videos[i]._id.equals(videoId)){
+					playlist.videos[i].update({votes: votes - 1}, {multi: false}, function(err){
+						if(err){
+							console.error(err);
+						}
+					});
+					playlist.videos[i].save(function(err){
+						if(err){
+							console.error(err);
+						}
+					});
+				}
+			}
 		}
 	});
 

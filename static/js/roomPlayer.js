@@ -54,9 +54,23 @@ function addPlaylistToUser(name, shared){
 	});
 }
 
+function getRooms(){
+	$.ajax({
+		type: 'get',
+		url: '/rooms',
+		success: function(data, err){
+			console.log(data);
+			$.each(data, function(key, value) {
+				console.log(value.name);
+				$('#rooms').prepend('<li class="roomLI" onclick="clientJoinRoom(\''+ value + '\', ' + '\'' + value._id + '\')" data-id="' + value._id + '"><a href="#" >' + value.name + '</a></li>');
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 
-
+	getRooms();
 
 	var width = $(window).width();
 	var height = $(window).height();
@@ -88,11 +102,16 @@ $(document).ready(function(){
 
 	//Code for the div to add a room
 	//==========================================================
+	//When you click the plus icon in the top right corner the modal comes down
 	$('#addRoomButton').click(function(){
 		var tempTop =  0.2*height;
 		$('#createRoom').css({top: tempTop});
 	});
 
+	/*
+		When you click the create room button, create and join the room
+		if a room name has been entered. If not, display error msg.
+	*/
 	$('#createRoomButton').click(function(){
 		if($('#roomName').val()!== ""){
 			var tempRoom = $('#roomName').val();
@@ -107,23 +126,61 @@ $(document).ready(function(){
 		}
 	});
 
-	//Add the code for the cancel out of the menu
+	//Click the x icon to close the menu
+	$('#closeMenu').click(function(){
+		$('#createRoom').css({top: -300});
+	});
 
 	//==========================================================
+
+
+
+	//The menu icon
+	$('#menuIcon').click(function() {
+		if ($('#canvasDiv').hasClass('openMenu')){
+			$('#canvasDiv').css({left: 0}); 	
+			$('#canvasDiv').removeClass('openMenu'); 	
+			console.log("menu closed");
+			leftValue = 0;
+		} else {
+			leftValue = width - $('#homeMenu').height();
+			$('#canvasDiv').css({left: leftValue}); 	
+			$('#canvasDiv').addClass('openMenu'); 
+			console.log("menu open");
+		}
+		
+	}); 
+
+	//Logout
+	$('#logout').click(function(){
+		$.ajax({
+			type: 'get',
+			url: '/logout',
+			success:function(data){
+				console.log(data);
+			}
+		});
+	});
 
 
 	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
 		/*leftValue -= Math.floor(width) */
-		console.log(leftValue);
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-		$(this).addClass('depressed');
+		// $(this).addClass('depressed');
 	});
 
 	$('#backButton').click(function() {
-		leftValue += (width - 0);
-		console.log(leftValue);
-		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  	
+
+			
+		// disconnectFromRoom();
+		var leave = confirm ("You want to leave the room?");
+		if (leave === true) {
+			clientLeaveRoom();
+			leftValue += (width - 0);
+			console.log(leftValue);
+			$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  			
+		}
 	});
   	 	
  	 	
@@ -185,7 +242,25 @@ $(document).ready(function(){
 
 			down =false;
 		}
-	})
+	});
+
+
+	//show and hide player buttons
+	$('#dj-request').click(function(){
+		//$('#controls-parent').css({top: '0%'});
+		//requestToBeDJ();
+	});
+	
+	$('#ytButtons').click(function(){
+		//$('#controls-parent').css({top: '-100%'});
+	});
+	
+	//upvote downvote
+	$('#votes').click(function(){
+		console.log('hide');
+		$(this).hide();
+	});
+	
 	
 	$('#searchResults').on('click', '.video-result-wrapper', function(){
 		 // console.log(this);
@@ -201,9 +276,16 @@ $(document).ready(function(){
 		$(this).find('.add img').attr('src', 'img/check.png');
 		var videoData = $(this).data();
 		addVideo(videoData);
-
 	});
 	
+	//click events for arrows
+	$('#playlist').on('click', '#upvote', function() {
+		$(this).find('#black').attr('src', 'img/upselect.png');
+	});
+	
+	$('#playlist').on('click', '#downvote', function() {
+		$(this).find('#black').attr('src', 'img/downselect.png');
+	});
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);
@@ -310,6 +392,8 @@ $(document).ready(function(){
 	The API calls this function when the player's state changes.
 
 */
+
+		
 	var done = false;
 	
 	function onPlayerStateChange(e) {
@@ -359,11 +443,6 @@ $(document).ready(function(){
 			return 'video cued';
 		}		
 	}
-
-
-
-
-	
 });
 	
 function sessionTest(){
@@ -375,14 +454,5 @@ function sessionTest(){
 			}
 		});
 	}
-
-
-
-
-
-
-
-
-
 
 

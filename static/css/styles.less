@@ -94,8 +94,7 @@ input {
 	-moz-box-shadow:inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
     -webkit-box-shadow: inset 0px 10px 6px -6px black, inset 0px -6px 10px -6px black;
      box-shadow: inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
-     
-     
+         
 }
 
 
@@ -132,6 +131,9 @@ input {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+
+
 /*======================
 	Outer Container
 ======================*/
@@ -173,16 +175,17 @@ input {
 /*======================
 	Three screens 
 ======================*/
-/*
+
 #login-screen {
 	position: absolute;
 	top: 0px;
 	left: 0px;
 	bottom: 0px;
 	right: 0px;
-	width: (@screenWidth / @screenViews);
+	width: (@screenWidth);
 	height: @screenHeight;
 	text-align: center;
+	background-color: @backgroundColor;
 	padding: 1px;
 		h2 {
 			color: white;
@@ -190,7 +193,7 @@ input {
 			padding: 0px;
 		}
 }
-*/
+
 
 .iconButton {
 	cursor: hand;
@@ -238,6 +241,12 @@ input {
 	a {
 		color: white;
 	}
+	nav{
+		display: table;
+		width: 100%;
+		border-collapse: none;
+		border: none;
+	}
 }
 
 #homeMenu {
@@ -259,13 +268,79 @@ input {
 	}
 }
 
+#appMenu {
+	position: fixed;
+	top: 0px;
+	left: 0px;
+	bottom: 0px;
+	right: 0px;
+	width: (@screenWidth - @menuHeight);
+	height: @screenHeight;
+	// display: table-layout;
+	padding: 1px;
+	background-color: @backgroundColor2;
+	.box-sizing;	
+	h2 {
+		padding: 1em;
+		color: white;
+	}
+	a {
+		color: black;
+	}
+	nav{
+		display: table;
+		width: 100%;
+		border-collapse: none;
+		border: none;
+		// height: @screenHeight;
+		background-color: @backgroundColor3;
+	}
+	#menuTitle{
+		text-align: center;
+		height: @menuHeight;
+		h2 {
+			padding: 0;
+			margin: 0;
+			padding-top: 0.4em;
+		}
+	}
+	z-index: 0;
+}
+
+#menu-list {
+	position: relative;
+	background-color: @backgroundColor3;
+	display: table-row;	
+	li {
+		display: table-cell;
+		.borderStyle;
+		font-family: @buttonFont;
+		font-weight: @buttonWeight;
+		font-size: @buttonRoom;
+		color: black;
+		line-height: 100%;
+		padding: 1.2em 1em 1.2em 1em;
+		text-align: center;
+
+		// height: 3em;
+		
+		&:hover { 
+			color: white;
+			background-color: #00a2ff; 
+		}	
+		
+	}
+	list-style: none;
+}
+
 
 #rooms {
 	position: relative;
 	background-color: @backgroundColor;
+	display: table-row;
 	
 	li {
-
+		// display: table-cell;
 		.borderStyle;
 		font-family: @buttonFont;
 		font-weight: @buttonWeight;
@@ -273,6 +348,7 @@ input {
 		color: white;
 		line-height: 100%;
 		padding: 1em 1em 1em 1em;
+		text-align: center;
 
 		height: 3%;
 		
@@ -315,9 +391,23 @@ input {
 		height: 2em;
 		border: 1px solid #2d2d2d;
 		padding-top: .5em;
+		cursor: hand;
 		&:hover{
 			background-color: #00a2ff;
 			color: white;
+		}
+	}
+	#closeMenu {
+		position: absolute;
+		top: -0px;
+		right: 0px;
+		img {
+			height: 30px;
+			width: 30px;
+			cursor: hand;
+			&:hover{
+				background-color: #00a2ff;
+			}
 		}
 	}
 
@@ -346,11 +436,12 @@ input {
 	height: @screenHeight;	
 	
 	display: inline-block;
+	
 /* 	.box-sizing; */
 }
 
 #roomMenu {
-	position: relative;
+	position: absolute;
 	.borderStyleMenu;
 	background: @menuColor;
 	top: 0px;
@@ -374,6 +465,8 @@ input {
 	.borderStyleMenu;
 } 
 
+
+
 /*pushes down playlist on menu click, large container*/
 #playListDiv {
 	position: absolute;
@@ -381,8 +474,7 @@ input {
 	bottom: 0px;
 	height: (@playerHeight + @screenHeight);
 	background: @backgroundColor;
-	
-	
+		
 	-moz-transition:ease .5s;
 	-webkit-transition:ease .5s;
 	-ms-transition:ease .5s;
@@ -410,11 +502,32 @@ input {
 	height: 100%;
 }
 
+#controls-frame {
+	position: relative;
+	height: @menuHeight * 2;
+	width: @screenWidth;
+	background-color: transparent;
+	overflow: hidden;
+}
+
+#controls-parent {
+	position: relative;
+	height: 200%;
+	width: @screenWidth;
+	
+	-moz-transition:ease .5s;
+	-webkit-transition:ease .5s;
+	-ms-transition:ease .5s;
+	-o-transition:ease .5s;
+	transition:ease .5s;
+}
+
+
+
 #ytButtons {
 	position: relative;
-
-
-	height: @menuHeight * 2;
+	
+	height: 50%;
 	width: @screenWidth;
 	background: black;
 	cursor: hand;	
@@ -430,11 +543,32 @@ input {
 		margin-right: auto;	
 		margin-top: 0.1em;
 		margin-bottom: 0.1em;
-		padding: 0px 0.1em 0px 0.1em;
-			
+		padding: 0px 0.1em 0px 0.1em;			
 	}
+}
 
+#dj-request {
+	position: relative;
+	
+	height: 50%;
+	width: @screenWidth;
+	background: black;
+	color: @accentColor;
+	cursor: hand;	
+	display: inline-block;
 
+	line-height: 100%;
+
+	text-align: center;
+	font-size: @menuFontSize;
+	img {
+		height: 80%;
+		margin-left: auto;
+		margin-right: auto;	
+		margin-top: 0.1em;
+		margin-bottom: 0.1em;
+		padding: 0px 0.1em 0px 0.1em;			
+	}	
 }
 
 #buttons {
@@ -454,6 +588,12 @@ input {
 				background-color: #00a2ff; 
 		}
 	}
+}
+
+#playlist {
+	position: relative;
+	height: 200%;
+	overflow: auto;
 }
 
 #searchMenuButton {
@@ -492,6 +632,7 @@ input {
 	text-align: center;
 	padding-top: 0.5em;
 	padding-bottom: 0.5em;
+	
 }
 
 /*======================
@@ -525,7 +666,6 @@ search results will
 	left: ((@screenWidth / @screenViews) * 2);
 	width: (@screenWidth / @screenViews);
 	height: (@screenHeight + @bottomButtonHeight);
-	overflow: auto;
 	
 	background-color: white;
 	line-height: 100%;
@@ -567,8 +707,11 @@ search results will
 
 #searchResults {
 	position: relative;
+	height: 100%;
 	top: 0px;
 	left: 0px;
+	overflow: auto;
+	
 }
 
 /*======================
@@ -614,9 +757,9 @@ animate up and down
 	-o-transition: all 0.2s ease-in-out;	
 */
 	height: 75px;	
-/* 	border-bottom: 1px solid black; */
+	border-bottom: 1px solid black;
 	background: white;
-
+	overflow: hidden;
 
 	.thumbnail {
 		height: 100%;
@@ -653,7 +796,7 @@ animate up and down
 }
 
 p {
-	font-size: small;
+	font-size: 5px;
 	font-family: @buttonFont;
 	font-weight: @textWeight;
 	color: rgba(0,162,255,0.7);
@@ -683,6 +826,47 @@ a {
 #add {
 	height: 75px;	
 }
+
+
+
+#votes {
+	float: right;
+	height: 100%;
+	width: 37px;
+	margin-right: 12px;
+
+}
+
+#upvote {
+	position: relative;
+	img {
+		right: 0px;
+		top:0px;	
+		float: right;
+		height: 37px;
+		width: 37px;
+	}			
+}	
+
+#downvote {
+	position: relative;
+	img {
+		right: 0px;
+		top:0px;	
+		float: right;
+		height: 37px;
+		width: 37px;
+	}		
+}
+
+#blue {
+	margin-top: -37;
+}
+
+#black {
+	z-index: 100;
+}
+
 
 
 

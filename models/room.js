@@ -31,7 +31,17 @@ Room.statics.getPlaylist = function(roomId, callback){
 			console.log(err);
 		}
 		else{
-			callback(room.playlist);
+			console.log("found room: ", room);
+			console.log("found playlist: ", room.playlist);
+			var Playlist = mongoose.model("Playlist");
+			Playlist.findById(room.playlist, function(err, playlist){
+				if(err){
+					console.log(err);
+				}
+				else{
+					callback(playlist);
+				}
+			});
 		}
 	});
 };
@@ -48,9 +58,8 @@ Room.methods.getState = function(roomId, callback){
 	});
 };
 
-Room.methods.changeState = function(roomId, newState){
-	var Room = mongoose.model('Room');
-	Room.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
+Room.statics.changeState = function(roomId, newState, callback){
+	this.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
 		if(err){
 			console.log(err);
 		}
@@ -86,6 +95,7 @@ Room.methods.changeDJ = function(roomId, dj_id, callback){
 
 Room.methods.addPlaylist = function(roomId, playlistId, callback){
 	var Room = mongoose.model('Room');
+	console.log("Looking for room: ", roomId);
 	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, room){
 		if(err){
 			console.log(err);
