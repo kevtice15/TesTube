@@ -96,15 +96,19 @@
 						<iframe id="ytplayer"> </iframe>	
 						</div>
 						
-						<div id="ytButtons">
-							<a id="previous"><img src="img/previous.png"/></a>	
-							<a id="stop"><img src="img/stop.png"/></a>
-							<a id="pause"><img src="img/pause.png"/></a>
-							<a id="play"><img src="img/play.png"/></a>							
-							<a id="next"><img src="img/next.png"/></a>
-							<a id="mute"><img src="img/mute.png"/></a>			
+						<div id="controls-frame">
+							<div id="controls-parent">
+								<div id="ytButtons">
+									<a id="previous"><img src="img/previous.png"/></a>	
+									<a id="stop"><img src="img/stop.png"/></a>
+									<a id="pause"><img src="img/pause.png"/></a>
+									<a id="play"><img src="img/play.png"/></a>							
+									<a id="next"><img src="img/next.png"/></a>
+									<a id="mute"><img src="img/mute.png"/></a>			
+								</div>
+								<div id="dj-request">Request DJ playa</div>		
+							</div>
 						</div>
-						
 <!--
 						<div id="roomSubMenu">							
 						</div>
@@ -123,8 +127,9 @@
 						</div>
 	-->
 					
-						<div id="buttons"></div>
-						<div id='playlist'></div>
+<!-- 						<div id="buttons"></div> -->
+						<div id='playlist'>playlist</div>
+						
 							
 							<script id="playlistTemplate" type="text/x-handlebars-template">
 								
@@ -134,6 +139,10 @@
 									</div>
 									<div class="search-title"> {{title}} </div>
 			<!-- 						<p class="search-id"> {{id}}</p> -->
+									<div id="votes">
+										<div id="upvote" class="vote-arrow"> <img id="black" src="img/up.png"/><!-- <img id="blue" src="img/upselect.png"/> --></div>
+										<div id="downvote" class="vote-arrow"><img id="black" src="img/down.png"/><!-- <img id="blue" src="img/downselect.png"/> --></div>
+									</div>
 								</div>	
 							
 											
@@ -177,10 +186,13 @@
 							<img src="{{snippet.thumbnails.default.url}}">
 						</div>
 						<div class="search-title"> {{snippet.title}} 
-						<p>comment count: {{stats.commentCount}}
-						dislike count: {{stats.dislikeCount}}
-						like count: {{stats.likeCount}}
-						view count: {{stats.viewCount}}</p></div>
+							<p>
+								comment count: {{stats.commentCount}}
+								dislike count: {{stats.dislikeCount}}
+								like count: {{stats.likeCount}}
+								view count: {{stats.viewCount}}
+							</p>
+						</div>
 						<div class="add">
 							<img src="img/add.png">
 						</div>

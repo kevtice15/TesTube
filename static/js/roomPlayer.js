@@ -151,7 +151,7 @@ $(document).ready(function(){
 	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
 		/*leftValue -= Math.floor(width) */
-		console.log(leftValue);
+		
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
 		// $(this).addClass('depressed');
 	});
@@ -229,6 +229,23 @@ $(document).ready(function(){
 		}
 	})
 	
+	
+	//show and hide player buttons
+	$('#dj-request').click(function(){
+		$('#controls-parent').css({top: '0%'});			
+	});
+	
+	$('#ytButtons').click(function(){
+		$('#controls-parent').css({top: '-100%'});		
+	});
+	
+	//upvote downvote
+	$('#votes').click(function(){
+		console.log('hide');
+		$(this).hide();
+	});
+	
+	
 	$('#searchResults').on('click', '.video-result-wrapper', function(){
 		 // console.log(this);
 		 // console.log($(this));
@@ -246,6 +263,14 @@ $(document).ready(function(){
 
 	});
 	
+	//click events for arrows
+	$('#playlist').on('click', '#upvote', function() {
+		$(this).find('#black').attr('src', 'img/upselect.png');
+	});
+	
+	$('#playlist').on('click', '#downvote', function() {
+		$(this).find('#black').attr('src', 'img/downselect.png');
+	});
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);
