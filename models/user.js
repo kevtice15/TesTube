@@ -142,8 +142,23 @@ UserSchema.statics.leaveRoom = function(userId, callback){
 	});
 };
 
-UserSchema.methods.becomeDJ = function(){
-
+UserSchema.statics.becomeDJ = function(userId, roomId, callback){
+	var Room = mongoose.model("Room");
+	this.findById(userId, function(err, user){
+		if(err){
+			console.error(err);
+		}
+		else{
+			Room.findByIdAndUpdate(user.room, {$set: {DJ: userId}}, function(err, room){
+				if(err){
+					console.error(err);
+				}
+				else{
+					callback(room);
+				}
+			});
+		}
+	});
 };
 
 UserSchema.methods.relinquishDJ = function(){

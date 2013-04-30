@@ -100,9 +100,9 @@ function clientJoinRoom(r, room_id){
 
 		console.log("Populating playlist: ", upPlaylist);
 		playlist = upPlaylist.videos;
-		if(isDJ){
+		if(isDJ && playlist !== undefined && playlist !== []){
 			console.log("The DJ ENTERS", isDJ);
-			player.loadVideoById(playlist[0], 0, 'medium');
+			player.cueVideoById(playlist[0].youtube_id, 0, 'medium');
 			console.log("Player loaded video");
 		}
 		console.log("Now playlist = ", playlist);
