@@ -15,6 +15,19 @@
 </head>
  	<body>
  	<div id="phoneContainer">
+ 		
+ 		<!-- The menu for the application -->
+		<div id="appMenu">
+			<div id="menuTitle"><h2>Letucé</h2></div>
+			<nav>
+				<ul id="menu-list">
+					<li id="logout">
+						<a href="#" >Log out</a>
+					</li>
+				</ul>
+			</nav>
+		</div>
+		
  		<div id="canvasDiv">
 			<!-- <div id="center-box"></div> -->
 
@@ -37,10 +50,12 @@
 			<!--home screen -->
 			<div id="home-screen">
 				<div id="homeMenu">
-					<img class="leftIcon" src="img/menu.png"/>
+					<img id="menuIcon" class="leftIcon" src="img/menu.png"/>
 					<img class="centerIcon" src="img/room.png"/>
 					<img id="addRoomButton" class="rightIcon" src="img/plus.png"/>	
 				</div>
+				
+			
 				<nav>
 					<ul id="rooms">
 						<li class="roomLI" id="room1" onclick=clientJoinRoom('room1')>
@@ -53,7 +68,7 @@
 				</nav>
 				<!-- <div id="rooms"></div> -->
 
-				<!-- Need to add a cancel button, maybe an x in the corner -->
+				<!-- Div modal for creating a room -->
 				<div id="createRoom">
 					<input id="roomName" val=""></input>
 					<div id="createRoomButton">Create Room</div>

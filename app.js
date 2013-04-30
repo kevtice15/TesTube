@@ -82,6 +82,8 @@ passport.deserializeUser(function(id, done){
 	//		console.log(err);
 	//	}
 	//	else{
+		// console.log("DESERIALIZER !!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+
 			done(null, id);
 	//	}
 	//});
@@ -95,6 +97,7 @@ passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
     callbackURL: "http://127.0.0.1:8889/auth/google/callback"
+    // callbackURL: "http://letuce.nodejitsu.com/auth/google/callback"
   },
   function(accessToken, refreshToken, profile, done) {
     // asynchronous verification, for effect...
@@ -188,7 +191,7 @@ app.get('/auth/google/callback',
 
 app.get('/logout', function(req, res){
   req.logout();
-  res.redirect('/static/index.html');
+  res.redirect('/static/login.html');
 });
 
 
