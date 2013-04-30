@@ -196,6 +196,8 @@ $(document).ready(function(){
 		}
 	})
 	
+	
+	//show and hide player buttons
 	$('#dj-request').click(function(){
 		$('#controls-parent').css({top: '0%'});			
 	});
@@ -204,6 +206,11 @@ $(document).ready(function(){
 		$('#controls-parent').css({top: '-100%'});		
 	});
 	
+	//upvote downvote
+	$('#votes').click(function(){
+		console.log('hide');
+		$(this).hide();
+	});
 	
 	
 	$('#searchResults').on('click', '.video-result-wrapper', function(){
@@ -223,6 +230,14 @@ $(document).ready(function(){
 
 	});
 	
+	//click events for arrows
+	$('#playlist').on('click', '#upvote', function() {
+		$(this).find('#black').attr('src', 'img/upselect.png');
+	});
+	
+	$('#playlist').on('click', '#downvote', function() {
+		$(this).find('#black').attr('src', 'img/downselect.png');
+	});
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);
