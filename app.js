@@ -145,13 +145,13 @@ app.get("/static/img/:filename", function(request, response){
 	response.sendfile("static/img/" + request.params.filename);
 });
 
-app.get('/', function(req, res){
-  res.render('index', { user: req.user });
-});
+// app.get('/', function(req, res){
+//   res.render('index', { user: req.user });
+// });
 
-app.get('/account', ensureAuthenticated, function(req, res){
-  res.render('account', { user: req.user });
-});
+// app.get('/account', ensureAuthenticated, function(req, res){
+//   res.render('account', { user: req.user });
+// });
 
 app.get('/login', function(req, res){
   res.sendfile('static/login.html');
@@ -159,10 +159,10 @@ app.get('/login', function(req, res){
 
 
 
-app.get('/test', function(req, res){
-	console.log(req.user);
-	res.send({success: true});
-});
+// app.get('/test', function(req, res){
+// 	console.log(req.user);
+// 	res.send({success: true});
+// });
 
 
 // GET /auth/google
@@ -262,7 +262,27 @@ app.io.sockets.on("connection", function(socket) {
 		console.log("Add room start");
 		var user = socket.handshake.session.passport.user;
 		//create new room in db
-		var newRoom = new Room({'name': roomname, 'DJ': user});
+		
+		var newPlaylist = new Playlist({
+			creator: user,
+			shared: true,
+			name: roomname,
+			dj: user
+		});
+		newPlaylist.save(function(err, newPlaylist){
+			if(err){
+				console.error(err);
+			}
+			else{
+				console.log(newPlaylist);
+			}
+		});
+
+		var newRoom = new Room({
+			'name': roomname,
+			'DJ': user,
+			'playlist': newPlaylist._id
+		});
 		newRoom.save(function(err, newRoom){
 			if(err){
 				console.error(err);
@@ -271,6 +291,12 @@ app.io.sockets.on("connection", function(socket) {
 				console.log(newRoom);
 			}
 		});
+		
+		// console.log("new room id", newRoom._id);
+		// newRoom.addPlaylist(newRoom._id, newPlaylist._id, function(room){
+		// 	console.log("Added playlist to room:", room);
+		// })
+		
 		socket.handshake.session.passport.room = newRoom._id;
 		console.log(socket.handshake.session.passport);
 		socket.emit('write-room-id', {room_id: newRoom._id});
@@ -282,7 +308,7 @@ app.io.sockets.on("connection", function(socket) {
 
 	socket.on('joinRoom', function(room){
 		// store the room name in the socket session for this client
-		console.log("HOW BOUT THIS JOIN ROOM ENTRY");
+		console.log("HOW BOUT THIS SWEET JOIN ROOM ENTRY");
 		socket.room = room.room_name;
 		var roomname = room.room_name;
 		var room_Id = room.room_id;
@@ -296,10 +322,12 @@ app.io.sockets.on("connection", function(socket) {
 		Room.findById(room_Id, function(err, room){
 			//if the room exists
 			if(room !== null){
+				console.log("Room exists!");
 				//Add user
 				User.joinRoom(user, room._id, function(upUser){
 					console.log(upUser);
 				});
+				/*
 				//Create playlist
 				var playlist = new Playlist({
 					creator: user,
@@ -316,10 +344,24 @@ app.io.sockets.on("connection", function(socket) {
 				room.addPlaylist(room._id, playlist._id, function(room){
 					console.log("added playlist to room", room);
 				});
+				*/
 			}
 			//if it doesn't exist
 			else{
+				console.log("Room doesn't exist!");
 				//create it with a new playlist
+				var newRoom = new Room({
+					name: roomname,
+					DJ: user,
+					playlist: playlist._id
+				});
+
+				newRoom.save(function(err){
+					if(err){
+						console.error(err);
+					}
+				});
+
 				var playlist = new Playlist({
 					creator: user,
 					shared: true,
@@ -332,16 +374,11 @@ app.io.sockets.on("connection", function(socket) {
 					}
 				});
 
-				var newRoom = new Room({
-					name: roomname,
-					DJ: user,
-					playlist: playlist
-				});
+				console.log("newRoom id: ", newRoom._id);
+				console.log("playlist id: ", playlist._id);
 
-				newRoom.save(function(err){
-					if(err){
-						console.error(err);
-					}
+				newRoom.addPlaylist(newRoom._id, playlist._id,function(room){
+					console.log("Room with playlist: ", room);
 				});
 				// add the user to it
 				User.joinRoom(user, newRoom._id, function(upUser){
@@ -375,18 +412,10 @@ app.io.sockets.on("connection", function(socket) {
 		var user = socket.handshake.session.passport.user;
 
 		//Attach user to room they just joined
-		updateUser.findByIdAndUpdate(user, {room_id: null}, function(err, updateUser){
-			if(err){
-				console.log(err);
-			}
-			else{
-				console.log(updateUser);
-			}
+		user.leaveRoom(user, undefined, function(user){
+			console.log("Removed user from room: ", user);
 		});
-		updateUser.save(function(err){
-			console.log(err);
-		});
-		//TODO Delete room from db
+		//TODO Delete room from db if no one is in the room;
 		var oldroom = socket.room;
 		socket.leave(socket.room);
 		console.log('user left room');

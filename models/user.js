@@ -53,7 +53,7 @@ UserSchema.methods.addPlaylist = function(user, data, callback){
 */
 };
 
-UserSchema.deletePlaylist = function(user, playlist, callback){
+UserSchema.statics.deletePlaylist = function(user, playlist, callback){
 	var Playlist = mongoose.model('Playlist');
 	
 	Playlist.findByIdAndRemove(playlist, function(err, Playlist){
@@ -117,12 +117,15 @@ UserSchema.statics.joinRoom = function(userId, roomId, callback){
 
 };
 
-UserSchema.statics.leaveRoom = function(userId, roomId){
+UserSchema.statics.leaveRoom = function(userId, callback){
 	this.findByIdAndUpdate(userId, {room_id: undefined}, function(err, User){
 		if(err){
 			console.log(err);
 		}
 		else{
+			User.save(function(err){
+				console.log(err);
+			});
 			callback(User);
 		}
 	});

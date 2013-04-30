@@ -63,7 +63,7 @@ function clientJoinRoom(r, room_id){
 			// player.seekTo(data.time, false);
 		}else if(data.state === 'paused'){
 			player.seekTo(data.time, false);
-			player.pauseVideo();	
+			player.pauseVideo();
 		}
 	});
 
@@ -73,7 +73,14 @@ function clientJoinRoom(r, room_id){
 	});
 
 	socket.on('populateRoom', function(playlist){
-		console.log("Populating playlist: " + playlist);
+		// TODO: display playlist and attach the id of the playlist and
+		// the videos in the HTML
+		var playlistDiv = $('#playlist');
+		playlistDiv.attr('data-id', playlist._id);
+		for(var i = 0; i < playlist.videos; i ++){
+			playlistDiv.append("<div class=\"video-results-wrapper\" data-id=\"" + playlist.videos[i]._id + "\" data-title=\"" + playlist.videos[i].name + "\"></div>");
+		}
+		console.log("Populating playlist: ", playlist);
 	});
 
 }
@@ -182,6 +189,7 @@ function stopVideo(){
 }
 
 function disconnectFromRoom(){
+	$("#playlist").empty();
 	socket.emit('disconnect');
 }
 
