@@ -404,6 +404,10 @@ app.io.sockets.on("connection", function(socket) {
 			console.log("The Playlist: " + playlist);
 			User.isDJ(user, room.room_id, function(amDJ){
 				socket.emit('populateRoom', playlist, amDJ);
+				if(!amDJ){
+					socket.emit('notDJ');
+				}
+				console.log("pop u late room emitted");
 			});
 		});
 	});
@@ -492,6 +496,34 @@ app.io.sockets.on("connection", function(socket) {
 	socket.on('stop', function(){
 		console.log("server received stop");
 		app.io.sockets.in(socket.roomname).emit('stopVideo')
+	});
+
+	socket.on('dj-request', function(){
+		var user = socket.handshake.session.passport.user;
+		var User = mongoose.model('UserSchema');
+		var Rooom = mongoose.model('Room');
+
+		User.findById(user, function(err, foundUser){
+			if(err){
+				console.error(err);
+			}
+			else{
+				User.isDJ(user, foundUser.room_id, function(isDJ){
+					if(!isDJ){
+						console.log("The user is not the dj");
+						Room.changeDJ(foundUser.room_id, foundUser._id, function(room){
+							console.log("New room dj: ", room);
+							socket.emit("giveDJControls");
+						});
+					}
+					else{
+						console.log("The user is the dj");
+						socket.emit("giveDJControls");
+
+					}
+				});
+			}
+		});
 	});
 
 });

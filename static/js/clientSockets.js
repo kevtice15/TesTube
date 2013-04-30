@@ -16,7 +16,7 @@ function clientJoinRoom(r, room_id){
 	socket.on('connect', function(){
 		console.log('client connected join');
 		console.log("Preparing to emit", r, room_id);
-		//socket.emit('joinRoom', {room_name: r, room_id: room_id});
+		socket.emit('joinRoom', {room_name: r, room_id: room_id});
 		console.log("Join room emitted");
 	});
 
@@ -96,17 +96,24 @@ function clientJoinRoom(r, room_id){
 			//playlistDiv.append(vidResultsDiv);
 		}
 
-
-
+		
 		console.log("Populating playlist: ", upPlaylist);
 		playlist = upPlaylist.videos;
-		if(isDJ && playlist !== undefined && playlist !== []){
+		if(playlist !== undefined && playlist !== []){
 			console.log("The DJ ENTERS", isDJ);
 			player.cueVideoById(playlist[0].youtube_id, 0, 'medium');
 			console.log("Player loaded video");
 		}
 		console.log("Now playlist = ", playlist);
 
+	});
+
+	// socket.on('giveDJControls', function(){
+	// 	$('#controls-parent').css({top: '0%'});
+	// });
+
+	socket.on('notDJ', function(){
+		$('#controls-parent').css({top: '-100%'});
 	});
 
 }
@@ -217,6 +224,10 @@ function stopVideo(){
 	socket.emit('stop');
 }
 
+// function requestToBeDJ(){
+// 	socket.emit('dj-request');
+// 	console.log("Emitted dj request");
+// }
 
 // function disconnectFromRoom(){
 // 	$("#playlist").empty();

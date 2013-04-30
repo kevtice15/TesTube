@@ -54,9 +54,23 @@ function addPlaylistToUser(name, shared){
 	});
 }
 
+function getRooms(){
+	$.ajax({
+		type: 'get',
+		url: '/rooms',
+		success: function(data, err){
+			console.log(data);
+			$.each(data, function(key, value) {
+				console.log(value.name);
+				$('#rooms').prepend('<li class="roomLI" onclick="clientJoinRoom(\''+ value + '\', ' + '\'' + value._id + '\')" data-id="' + value._id + '"><a href="#" >' + value.name + '</a></li>');
+			});
+		}
+	});
+}
+
 $(document).ready(function(){
 
-
+	getRooms();
 
 	var width = $(window).width();
 	var height = $(window).height();
@@ -228,16 +242,17 @@ $(document).ready(function(){
 
 			down =false;
 		}
-	})
-	
-	
+	});
+
+
 	//show and hide player buttons
 	$('#dj-request').click(function(){
-		$('#controls-parent').css({top: '0%'});			
+		//$('#controls-parent').css({top: '0%'});
+		//requestToBeDJ();
 	});
 	
 	$('#ytButtons').click(function(){
-		$('#controls-parent').css({top: '-100%'});		
+		//$('#controls-parent').css({top: '-100%'});
 	});
 	
 	//upvote downvote
@@ -261,7 +276,6 @@ $(document).ready(function(){
 		$(this).find('.add img').attr('src', 'img/check.png');
 		var videoData = $(this).data();
 		addVideo(videoData);
-
 	});
 	
 	//click events for arrows
