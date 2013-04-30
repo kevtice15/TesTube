@@ -272,7 +272,7 @@ app.io.sockets.on("connection", function(socket) {
 				console.error(err);
 			}
 			else{
-				console.log(newPlaylist);
+				console.log("New playlist on add", newPlaylist);
 			}
 		});
 
@@ -286,7 +286,7 @@ app.io.sockets.on("connection", function(socket) {
 				console.error(err);
 			}
 			else{
-				console.log(newRoom);
+				console.log("New room on add", newRoom);
 			}
 		});
 		
@@ -295,13 +295,14 @@ app.io.sockets.on("connection", function(socket) {
 		// 	console.log("Added playlist to room:", room);
 		// })
 		
-		socket.handshake.session.passport.room = newRoom._id;
+		//socket.handshake.session.passport.room = newRoom._id;
 		console.log(socket.handshake.session.passport);
-		socket.emit('write-room-id', {room_id: newRoom._id});
+		
 		//socket.emit('rooms:create', {body:{name: roomname}});
 		//rooms.create({name: roomname});
 		//socket.emit('roomDoneCreated');
 		console.log("Add room end");
+		socket.emit('write-room-id', {room_id: newRoom._id});
 	});
 
 	socket.on('joinRoom', function(room){
@@ -318,6 +319,7 @@ app.io.sockets.on("connection", function(socket) {
 		var User = mongoose.model('UserSchema');
 
 		Room.findById(room_Id, function(err, room){
+			console.log("I get here 1");
 			//if the room exists
 			if(room !== null){
 				console.log("Room exists!");
@@ -348,18 +350,6 @@ app.io.sockets.on("connection", function(socket) {
 			else{
 				console.log("Room doesn't exist!");
 				//create it with a new playlist
-				var newRoom = new Room({
-					name: roomname,
-					DJ: user,
-					playlist: playlist._id
-				});
-
-				newRoom.save(function(err){
-					if(err){
-						console.error(err);
-					}
-				});
-
 				var playlist = new Playlist({
 					creator: user,
 					shared: true,
@@ -367,6 +357,18 @@ app.io.sockets.on("connection", function(socket) {
 					dj: user
 				});
 				playlist.save(function(err){
+					if(err){
+						console.error(err);
+					}
+				});
+
+				var newRoom = new Room({
+					name: roomname,
+					DJ: user,
+					playlist: playlist._id
+				});
+
+				newRoom.save(function(err){
 					if(err){
 						console.error(err);
 					}
@@ -384,7 +386,7 @@ app.io.sockets.on("connection", function(socket) {
 				});
 			}
 		});
-
+		console.log("I get here 2");
 		// join room
 		socket.join(roomname);
 		//var newRoom = rooms.create({'body':{'name': roomname, 'DJ': user}});
@@ -396,7 +398,7 @@ app.io.sockets.on("connection", function(socket) {
 		// echo to room 1 that a person has connected to their room
 		socket.broadcast.to(roomname).emit('updatechat',  ' has connected to this room');
 
-
+		console.log("I get here 3");
 		console.log("Get room playlist: ", room.room_id);
 		Room.getPlaylist(room.room_id, function(playlist){
 			console.log("The Playlist: " + playlist);

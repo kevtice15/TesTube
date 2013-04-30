@@ -16,7 +16,7 @@ function clientJoinRoom(r, room_id){
 	socket.on('connect', function(){
 		console.log('client connected join');
 		console.log("Preparing to emit", r, room_id);
-		socket.emit('joinRoom', {room_name: r, room_id: room_id});
+		//socket.emit('joinRoom', {room_name: r, room_id: room_id});
 		console.log("Join room emitted");
 	});
 
@@ -141,6 +141,8 @@ function clientCreateRoom(r){
 
 	socket.on("write-room-id", function(data){
 		$('#rooms').prepend('<li class="roomLI" onclick="clientJoinRoom(\''+ r + '\', ' + '\'' + data.room_id + '\')" data-id="' + data.room_id + '"><a href="#" >' + r + '</a></li>');
+		var newData = {room_name: r, room_id:data.room_id};
+		socket.emit('joinRoom', newData);
 	});
 
 	// listener, whenever the server emits 'updatechat', this updates the chat body
