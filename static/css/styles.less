@@ -94,8 +94,7 @@ input {
 	-moz-box-shadow:inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
     -webkit-box-shadow: inset 0px 10px 6px -6px black, inset 0px -6px 10px -6px black;
      box-shadow: inset 0px 6px 10px -6px black, inset 0px -6px 10px -6px black;
-     
-     
+         
 }
 
 
@@ -403,8 +402,7 @@ input {
 	bottom: 0px;
 	height: (@playerHeight + @screenHeight);
 	background: @backgroundColor;
-	
-	
+		
 	-moz-transition:ease .5s;
 	-webkit-transition:ease .5s;
 	-ms-transition:ease .5s;
@@ -432,11 +430,32 @@ input {
 	height: 100%;
 }
 
+#controls-frame {
+	position: relative;
+	height: @menuHeight * 2;
+	width: @screenWidth;
+	background-color: transparent;
+	overflow: hidden;
+}
+
+#controls-parent {
+	position: relative;
+	height: 200%;
+	width: @screenWidth;
+	
+	-moz-transition:ease .5s;
+	-webkit-transition:ease .5s;
+	-ms-transition:ease .5s;
+	-o-transition:ease .5s;
+	transition:ease .5s;
+}
+
+
+
 #ytButtons {
 	position: relative;
-
-
-	height: @menuHeight * 2;
+	
+	height: 50%;
 	width: @screenWidth;
 	background: black;
 	cursor: hand;	
@@ -452,12 +471,36 @@ input {
 		margin-right: auto;	
 		margin-top: 0.1em;
 		margin-bottom: 0.1em;
-		padding: 0px 0.1em 0px 0.1em;
-			
+		padding: 0px 0.1em 0px 0.1em;			
 	}
-
-
 }
+
+#dj-request {
+	position: relative;
+	
+	height: 50%;
+	width: @screenWidth;
+	background: black;
+	color: @accentColor;
+	cursor: hand;	
+	display: inline-block;
+
+	line-height: 100%;
+
+	text-align: center;
+	font-size: @menuFontSize;
+	img {
+		height: 80%;
+		margin-left: auto;
+		margin-right: auto;	
+		margin-top: 0.1em;
+		margin-bottom: 0.1em;
+		padding: 0px 0.1em 0px 0.1em;			
+	}	
+}
+
+
+
 
 #buttons {
 	position: relative;
