@@ -120,19 +120,53 @@ $(document).ready(function(){
 	//==========================================================
 
 
+
+	//The menu icon
+	$('#menuIcon').click(function() {
+		if ($('#canvasDiv').hasClass('openMenu')){
+			$('#canvasDiv').css({left: 0}); 	
+			$('#canvasDiv').removeClass('openMenu'); 	
+			console.log("menu closed");
+			leftValue = 0;
+		} else {
+			leftValue = width - $('#homeMenu').height();
+			$('#canvasDiv').css({left: leftValue}); 	
+			$('#canvasDiv').addClass('openMenu'); 
+			console.log("menu open");
+		}
+		
+	}); 
+
+	//Logout
+	$('#logout').click(function(){
+		$.ajax({
+			type: 'get',
+			url: '/logout',
+			success:function(data){
+				console.log(data);
+			}
+		});
+	});
+
+
 	$('#rooms').on('click', '.roomLI', function() {
 		leftValue -= (width - 0);
 		/*leftValue -= Math.floor(width) */
 		$('#canvasDiv').css({top: 0, left: leftValue, position: 'absolute'});
-		$(this).addClass('depressed');
+		// $(this).addClass('depressed');
 	});
 
 	$('#backButton').click(function() {
-		leftValue += (width - 0);
-		console.log(leftValue);
-		$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});
-		clientLeaveRoom();
-		playlist = [];
+
+			
+		// disconnectFromRoom();
+		var leave = confirm ("You want to leave the room?");
+		if (leave === true) {
+			clientLeaveRoom();
+			leftValue += (width - 0);
+			console.log(leftValue);
+			$('#canvasDiv').css({top: - 0, left: leftValue, position: 'absolute'});	  			
+		}
 	});
   	 	
  	 	
@@ -196,6 +230,8 @@ $(document).ready(function(){
 		}
 	})
 	
+	
+	//show and hide player buttons
 	$('#dj-request').click(function(){
 		$('#controls-parent').css({top: '0%'});			
 	});
@@ -204,6 +240,11 @@ $(document).ready(function(){
 		$('#controls-parent').css({top: '-100%'});		
 	});
 	
+	//upvote downvote
+	$('#votes').click(function(){
+		console.log('hide');
+		$(this).hide();
+	});
 	
 	
 	$('#searchResults').on('click', '.video-result-wrapper', function(){
@@ -223,6 +264,14 @@ $(document).ready(function(){
 
 	});
 	
+	//click events for arrows
+	$('#playlist').on('click', '#upvote', function() {
+		$(this).find('#black').attr('src', 'img/upselect.png');
+	});
+	
+	$('#playlist').on('click', '#downvote', function() {
+		$(this).find('#black').attr('src', 'img/downselect.png');
+	});
 
 	//Will want to put a add videos thing to the empty video or a create group thing
 	createVideo(playlist[0]);
