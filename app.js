@@ -221,7 +221,7 @@ db.once('open', function callback() {
 //Not doing anything here; you can use the restful api with cURL
 
 });
-	
+
 
 
 
@@ -253,14 +253,14 @@ var roomState = {
 
 app.io.sockets.on("connection", function(socket) {
 	console.log('SERVER CONNECTION!@@@@@@@@@@@@@@@@@@@@@@@@@@');
-	
+
 	//console.log(socket);
-	
+
 	socket.on('addRoom', function(roomname){
 		console.log("Add room start");
 		var user = socket.handshake.session.passport.user;
 		//create new room in db
-		
+
 		var newPlaylist = new Playlist({
 			creator: user,
 			shared: true,
@@ -289,15 +289,15 @@ app.io.sockets.on("connection", function(socket) {
 				console.log("New room on add", newRoom);
 			}
 		});
-		
+
 		// console.log("new room id", newRoom._id);
 		// newRoom.addPlaylist(newRoom._id, newPlaylist._id, function(room){
 		// 	console.log("Added playlist to room:", room);
 		// })
-		
+
 		//socket.handshake.session.passport.room = newRoom._id;
 		console.log(socket.handshake.session.passport);
-		
+
 		//socket.emit('rooms:create', {body:{name: roomname}});
 		//rooms.create({name: roomname});
 		//socket.emit('roomDoneCreated');
@@ -418,12 +418,12 @@ app.io.sockets.on("connection", function(socket) {
 		var user = socket.handshake.session.passport.user;
 		console.log("User at disconnect", user);
 		//Attach user to room they just joined
-		
+
 		User.leaveRoom(user, function(foundUser){
 			console.log("Removed user from room: ", foundUser);
 		});
-		
-		
+
+
 		//TODO Delete room from db if no one is in the room;
 
 		var oldroom = socket.room;

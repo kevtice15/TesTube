@@ -16,10 +16,10 @@ Room.methods.getDJ = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
-			callback(room.DJ);
+			return callback(room.DJ);
 		}
 	});
 };
@@ -28,7 +28,7 @@ Room.statics.getPlaylist = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
 			console.log("found room: ", room);
@@ -36,10 +36,10 @@ Room.statics.getPlaylist = function(roomId, callback){
 			var Playlist = mongoose.model("Playlist");
 			Playlist.findById(room.playlist, function(err, playlist){
 				if(err){
-					console.log(err);
+					return console.log(err);
 				}
 				else{
-					callback(playlist);
+					return callback(playlist);
 				}
 			});
 		}
@@ -50,10 +50,10 @@ Room.methods.getState = function(roomId, callback){
 	var Room = mongoose.model('Room');
 	Room.findById(roomId, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
-			callback(room.state);
+			return callback(room.state);
 		}
 	});
 };
@@ -61,15 +61,15 @@ Room.methods.getState = function(roomId, callback){
 Room.statics.changeState = function(roomId, newState, callback){
 	this.findByIdAndUpdate(roomId, {state: newState}, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
 			room.save(function(err){
 				if(err){
-					console.error(err);
+					return console.error(err);
 				}
 			});
-			callback(room);
+			return callback(room);
 		}
 	});
 };
@@ -78,15 +78,15 @@ Room.methods.changeDJ = function(roomId, dj_id, callback){
 	var Room = mongoose.model('Room');
 	Room.findByIdAndUpdate(roomId, {DJ: dj_id}, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
 			room.save(function(err){
 				if(err){
-					console.error(err);
+					return console.error(err);
 				}
 			});
-			callback(Room);
+			return callback(Room);
 		}
 	});
 };
@@ -98,13 +98,16 @@ Room.methods.addPlaylist = function(roomId, playlistId, callback){
 	console.log("Looking for room: ", roomId);
 	Room.findByIdAndUpdate(roomId, {playlist: playlistId}, function(err, room){
 		if(err){
-			console.log(err);
+			return console.log(err);
 		}
 		else{
 			room.save(function(err){
-				console.error(err);
+				if(err){
+					return console.error(err);
+				}
+				
 			});
-			callback(room);
+			return callback(room);
 		}
 	});
 };

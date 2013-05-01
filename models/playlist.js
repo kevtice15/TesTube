@@ -28,10 +28,10 @@ Playlist.methods.addVideo = function(playlistId, yt_id, yt_name, yt_thumbnail, c
 			playlist.videos.push(newVideo);
 			playlist.save(function(err){
 				if(err){
-					console.error(err);
+					return console.error(err);
 				}
 			});
-			callback(playlist);
+			return callback(playlist);
 		}
 	});
 	/*
@@ -64,7 +64,7 @@ Playlist.statics.deleteVideo = function(playlistId, videoId, callback){
 	var Video = mongoose.model('Video');
 	this.findById(playlistId, function(err, playlist){
 		if(err){
-			console.error(err);
+			return console.error(err);
 		}
 		else{
 			playlist.videos.pull(videoId);
@@ -72,7 +72,7 @@ Playlist.statics.deleteVideo = function(playlistId, videoId, callback){
 			// 	playlist.videos.pull(video);
 			playlist.save(function(err){
 				if(err){
-			 		console.error(err);
+			 		return console.error(err);
 			 	}
 			});
 			// });
@@ -91,12 +91,12 @@ Playlist.statics.addVote = function(playlistId, videoId, callback){
 				if(playlist.videos[i]._id.equals(videoId)){
 					playlist.videos[i].update({votes: votes + 1}, {multi: false}, function(err){
 						if(err){
-							console.error(err);
+							return console.error(err);
 						}
 					});
 					playlist.videos[i].save(function(err){
 						if(err){
-							console.error(err);
+							return console.error(err);
 						}
 					});
 				}
@@ -116,12 +116,12 @@ this.findById(playlistId, function(err, playlist){
 				if(playlist.videos[i]._id.equals(videoId)){
 					playlist.videos[i].update({votes: votes - 1}, {multi: false}, function(err){
 						if(err){
-							console.error(err);
+							return console.error(err);
 						}
 					});
 					playlist.videos[i].save(function(err){
 						if(err){
-							console.error(err);
+							return console.error(err);
 						}
 					});
 				}
